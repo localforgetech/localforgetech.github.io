@@ -10,6 +10,8 @@
             --card-bg: #1e293b;
             --accent: #38bdf8;
             --accent-hover: #0284c7;
+            --whatsapp: #22c55e;
+            --whatsapp-hover: #16a34a;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
         }
@@ -49,6 +51,11 @@
             border-radius: 6px;
         }
 
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .cta-btn {
             background-color: var(--accent);
             color: #0f172a;
@@ -62,6 +69,20 @@
         .cta-btn:hover {
             background-color: var(--accent-hover);
             color: #fff;
+        }
+
+        .wa-btn {
+            background-color: var(--whatsapp);
+            color: #ffffff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .wa-btn:hover {
+            background-color: var(--whatsapp-hover);
         }
 
         .hero {
@@ -90,6 +111,13 @@
             color: var(--text-sub);
             font-size: 1.15rem;
             margin-bottom: 2rem;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .features {
@@ -134,6 +162,14 @@
             margin-bottom: 1.5rem;
         }
 
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
         footer {
             text-align: center;
             padding: 2rem;
@@ -149,14 +185,20 @@
         <a href="#" class="brand-container">
             <img src="logo.png" alt="LocalForge Tech Logo" class="brand-logo">
         </a>
-        <a href="mailto:localforgetech@gmail.com" class="cta-btn">Get Started</a>
+        <div class="nav-buttons">
+            <a href="tel:+91XXXXXXXXXX" class="cta-btn">📞 Call Us</a>
+            <a href="https://wa.me/91XXXXXXXXXX" target="_blank" class="wa-btn">💬 WhatsApp</a>
+        </div>
     </header>
 
     <section class="hero">
         <img src="logo.png" alt="LocalForge Tech" class="hero-logo-large">
         <h1>Empowering Local Businesses with Custom Apps & Software</h1>
         <p>We build tailored mobile apps, custom customer management portals, and modern web platforms designed to help local organizations grow and automate operations.</p>
-        <a href="mailto:localforgetech@gmail.com" class="cta-btn">Schedule a Free Consultation</a>
+        <div class="hero-cta-group">
+            <a href="tel:+91XXXXXXXXXX" class="cta-btn">Call: +91 XXXXXXXXXX</a>
+            <a href="https://wa.me/91XXXXXXXXXX" target="_blank" class="wa-btn">Chat on WhatsApp</a>
+        </div>
     </section>
 
     <section class="features">
@@ -177,11 +219,15 @@
     <section class="contact-section">
         <h2>Ready to transform your business digitally?</h2>
         <p>Let's discuss how LocalForge Tech can build the right tools for your business.</p>
-        <a href="mailto:localforgetech@gmail.com" class="cta-btn">Email Us: localforgetech@gmail.com</a>
+        <div class="contact-links">
+            <a href="tel:+918708145865" class="cta-btn">📞 Call Us</a>
+            <a href="https://wa.me/918708145865" target="_blank" class="wa-btn">💬 WhatsApp Us</a>
+            <a href="mailto:localforgetech@gmail.com" class="cta-btn" style="background:#475569; color:#fff;">✉️ Email Us</a>
+        </div>
     </section>
 
     <footer>
-        &copy; 2026 LocalForge Tech. All rights reserved.
+        &copy; 2026 LocalForge Tech. All rights reserved. | Jind, Haryana
     </footer>
 
 </body>
