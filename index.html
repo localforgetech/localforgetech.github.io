@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalForge Tech | Custom Mobile Apps & Digital Solutions</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .cta-btn {
+            background-color: var(--accent);
+            color: #0f172a;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background-color: var(--accent-hover);
+            color: #fff;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            color: var(--text-sub);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .card h3 {
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+
+        .card p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+        }
+
+        .contact-section {
+            text-align: center;
+            padding: 4rem 1rem;
+            background-color: #111827;
+            margin-top: 3rem;
+        }
+
+        .contact-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .contact-section p {
+            color: var(--text-sub);
+            margin-bottom: 1.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            border-top: 1px solid #1e293b;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">LocalForge<span>Tech</span></a>
+        <a href="mailto:localforgetech@gmail.com" class="cta-btn">Get Started</a>
+    </header>
+
+    <section class="hero">
+        <h1>Empowering Local Businesses with Custom Apps & Software</h1>
+        <p>We build tailored mobile apps, custom customer management portals, and modern web platforms designed to help local organizations grow and automate operations.</p>
+        <a href="mailto:localforgetech@gmail.com" class="cta-btn">Schedule a Free Consultation</a>
+    </section>
+
+    <section class="features">
+        <div class="card">
+            <h3>📱 Custom Mobile Apps</h3>
+            <p>Android and iOS applications engineered to bring customer loyalty, booking, and ordering directly to your clients' phones.</p>
+        </div>
+        <div class="card">
+            <h3>🌐 Business Websites</h3>
+            <p>Lightning-fast, mobile-friendly landing pages and digital storefronts optimized for local search visibility and conversion.</p>
+        </div>
+        <div class="card">
+            <h3>⚙️ Custom Workflow Automation</h3>
+            <p>Tailored internal tools, inventory dashboards, and CRM integrations to save time and reduce manual workload.</p>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <h2>Ready to transform your business digitally?</h2>
+        <p>Let's discuss how LocalForge Tech can build the right tools for your business.</p>
+        <a href="mailto:localforgetech@gmail.com" class="cta-btn">Email Us: localforgetech@gmail.com</a>
+    </section>
+
+    <footer>
+        &copy; 2026 LocalForge Tech. All rights reserved.
+    </footer>
+
+</body>
+</html>
