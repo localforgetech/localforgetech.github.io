@@ -87,7 +87,7 @@
       const [authError, setAuthError] = useState('');
 
       // Default master password (Change this string to whatever you like)
-      const MASTER_PASSWORD = 'Admn@2001';
+      const MASTER_PASSWORD = 'Admin@2001';
 
       const handleLogin = (e) => {
         e.preventDefault();
