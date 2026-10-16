@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalForge Tech - Agency CRM & Operations Studio</title>
+
+  <!-- React & ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+  <!-- Babel for JSX compilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0F172A',
+              slate: '#1E293B',
+              card: '#0F172A',
+              border: '#334155',
+              cyan: '#38BDF8',
+              cyanHover: '#0284C7',
+              accent: '#0EA5E9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom scrollbar for dark canvas theme */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0F172A;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38BDF8;
+    }
+  </style>
+</head>
+<body class="bg-[#090D16] text-slate-100 font-sans antialiased min-h-screen">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const PIPELINE_STAGES = [
+      { id: 'New Lead', label: 'New Lead', color: 'border-cyan-500/50 bg-cyan-500/10 text-cyan-400' },
+      { id: 'Contacted', label: 'Contacted', color: 'border-blue-500/50 bg-blue-500/10 text-blue-400' },
+      { id: 'Meeting Scheduled', label: 'Meeting Scheduled', color: 'border-amber-500/50 bg-amber-500/10 text-amber-400' },
+      { id: 'Proposal Sent', label: 'Proposal Sent', color: 'border-purple-500/50 bg-purple-500/10 text-purple-400' },
+      { id: 'Closed Won', label: 'Closed Won', color: 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400' },
+      { id: 'Closed Lost', label: 'Closed Lost', color: 'border-rose-500/50 bg-rose-500/10 text-rose-400' }
+    ];
+
+    const INDUSTRIES = ['Education', 'Healthcare', 'Retail', 'Gym & Fitness', 'Real Estate', 'Services', 'Hospitality', 'Other'];
+    const SOURCES = ['Cold Visit', 'Instagram DM', 'WhatsApp Outreach', 'Referral', 'LinkedIn', 'Google Business'];
+
+    // Fresh Empty CRM Initial Data
+    const SAMPLE_LEADS = [];
+    const SAMPLE_LOGS = [];
+
+    function App() {
+      // Authentication state
+      const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        return sessionStorage.getItem('localforge_crm_auth') === 'true';
+      });
+      const [passwordInput, setPasswordInput] = useState('');
+      const [authError, setAuthError] = useState('');
+
+      // Default master password (Change this string to whatever you like)
+      const MASTER_PASSWORD = 'Admn@2001';
+
+      const handleLogin = (e) => {
+        e.preventDefault();
+        if (passwordInput === MASTER_PASSWORD) {
+          sessionStorage.setItem('localforge_crm_auth', 'true');
+          setIsAuthenticated(true);
+          setAuthError('');
+        } else {
+          setAuthError('Invalid Access Key. Please try again.');
+        }
+      };
+
+      const handleLogout = () => {
+        sessionStorage.removeItem('localforge_crm_auth');
+        setIsAuthenticated(false);
+      };
+
+      const [leads, setLeads] = useState(() => {
+        const saved = localStorage.getItem('localforge_crm_leads');
+        return saved ? JSON.parse(saved) : SAMPLE_LEADS;
+      });
+
+      const [logs, setLogs] = useState(() => {
+        const saved = localStorage.getItem('localforge_crm_logs');
+        return saved ? JSON.parse(saved) : SAMPLE_LOGS;
+      });
+
+      useEffect(() => {
+        localStorage.setItem('localforge_crm_leads', JSON.stringify(leads));
+      }, [leads]);
+
+      useEffect(() => {
+        localStorage.setItem('localforge_crm_logs', JSON.stringify(logs));
+      }, [logs]);
+
+      const [activeTab, setActiveTab] = useState('kanban');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedIndustry, setSelectedIndustry] = useState('All');
+      const [selectedStatus, setSelectedStatus] = useState('All');
+
+      const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+      const [editingLead, setEditingLead] = useState(null);
+      const [activeLogLead, setActiveLogLead] = useState(null);
+
+      useEffect(() => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      });
+
+      const metrics = useMemo(() => {
+        const totalLeads = leads.length;
+        const activeDeals = leads.filter(l => l.status !== 'Closed Won' && l.status !== 'Closed Lost').length;
+        const totalPipelineValue = leads
+          .filter(l => l.status !== 'Closed Lost')
+          .reduce((sum, l) => sum + (Number(l.value) || 0), 0);
+        const wonCount = leads.filter(l => l.status === 'Closed Won').length;
+        const conversionRate = totalLeads > 0 ? ((wonCount / totalLeads) * 100).toFixed(1) : '0';
+
+        return { totalLeads, activeDeals, totalPipelineValue, conversionRate };
+      }, [leads]);
+
+      const filteredLeads = useMemo(() => {
+        return leads.filter(lead => {
+          const matchesSearch = lead.businessName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                lead.contactPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                lead.phone.includes(searchQuery);
+          const matchesIndustry = selectedIndustry === 'All' || lead.industry === selectedIndustry;
+          const matchesStatus = selectedStatus === 'All' || lead.status === selectedStatus;
+          return matchesSearch && matchesIndustry && matchesStatus;
+        });
+      }, [leads, searchQuery, selectedIndustry, selectedStatus]);
+
+      const handleSaveLead = (leadData) => {
+        if (leadData.id) {
+          setLeads(prev => prev.map(l => l.id === leadData.id ? leadData : l));
+        } else {
+          const newLead = {
+            ...leadData,
+            id: 'lead-' + Date.now(),
+            createdAt: new Date().toISOString().split('T')[0]
+          };
+          setLeads(prev => [newLead, ...prev]);
+        }
+        setIsAddLeadOpen(false);
+        setEditingLead(null);
+      };
+
+      const handleDeleteLead = (id) => {
+        setLeads(prev => prev.filter(l => l.id !== id));
+        setLogs(prev => prev.filter(log => log.leadId !== id));
+      };
+
+      const handleUpdateLeadStatus = (leadId, newStatus) => {
+        setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: newStatus } : l));
+      };
+
+      const handleAddLog = (leadId, logData) => {
+        const newLog = {
+          id: 'log-' + Date.now(),
+          leadId,
+          ...logData,
+          date: new Date().toISOString().split('T')[0]
+        };
+        setLogs(prev => [newLog, ...prev]);
+      };
+
+      const handleExportData = () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ leads, logs }, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `localforge_crm_backup_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+      };
+
+      const getWhatsAppLink = (phone, businessName) => {
+        const cleanPhone = phone.replace(/\D/g, '');
+        const message = encodeURIComponent(`Hello ${businessName}, this is LocalForge Tech regarding your software & web platform query.`);
+        return `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${message}`;
+      };
+
+      // If user is not authenticated, show secure lock screen
+      if (!isAuthenticated) {
+        return (
+          <div className="min-h-screen bg-[#080C14] flex items-center justify-center p-4">
+            <div className="bg-[#0F172A] border border-slate-800 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-6">
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-slate-950 shadow-lg shadow-cyan-500/20 mx-auto mb-3">
+                  <i data-lucide="lock" className="w-6 h-6 text-slate-950"></i>
+                </div>
+                <h1 className="text-xl font-bold text-white tracking-wide">LOCALFORGE CRM</h1>
+                <p className="text-xs text-slate-400">Restricted Access Studio Portal</p>
+              </div>
+
+              <form onSubmit={handleLogin} className="space-y-4">
+                {authError && (
+                  <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs text-center font-medium">
+                    {authError}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-slate-400 text-xs font-medium mb-1.5">Master Access Key</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="Enter CRM Password..."
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-mono tracking-wider"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20"
+                >
+                  Unlock Workspace
+                </button>
+              </form>
+
+              <div className="text-center border-t border-slate-800/80 pt-4">
+                <p className="text-[11px] text-slate-500">LocalForge Tech • Operations & Client Studio</p>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen flex flex-col md:flex-row bg-[#080C14]">
+          {/* Sidebar Navigation */}
+          <aside className="w-full md:w-64 bg-[#0F172A] border-b md:border-b-0 md:border-r border-slate-800 flex-shrink-0 flex flex-col justify-between">
+            <div>
+              <div className="p-5 border-b border-slate-800/80 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-slate-950 shadow-lg shadow-cyan-500/20">
+                  <i data-lucide="hammer" className="w-5 h-5 text-slate-950"></i>
+                </div>
+                <div>
+                  <h1 className="font-bold text-lg text-white tracking-wide flex items-center gap-1.5">
+                    LOCALFORGE <span className="text-cyan-400 text-xs px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-800">CRM</span>
+                  </h1>
+                  <p className="text-xs text-slate-400">Jind Operations Studio</p>
+                </div>
+              </div>
+
+              <nav className="p-3 space-y-1">
+                <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                    activeTab === 'overview' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                  }`}
+                >
+                  <i data-lucide="layout-dashboard" className="w-4 h-4"></i>
+                  Overview & Stats
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('kanban')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                    activeTab === 'kanban' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                  }`}
+                >
+                  <i data-lucide="kanban" className="w-4 h-4"></i>
+                  Pipeline Board
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('directory')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                    activeTab === 'directory' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                  }`}
+                >
+                  <i data-lucide="users" className="w-4 h-4"></i>
+                  Client Directory
+                </button>
+              </nav>
+            </div>
+
+            <div className="p-4 border-t border-slate-800 bg-[#0B1120] text-xs text-slate-400 flex flex-col gap-2">
+              <button
+                onClick={handleExportData}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition mb-1 border border-slate-700"
+              >
+                <i data-lucide="download" className="w-3.5 h-3.5 text-cyan-400"></i> Export CRM Backup
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center gap-
