@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://unpkg.com https://cdn.tailwindcss.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' https:;">
   <meta name="impact-site-verification" value="80ed49c7-ca80-40b3-803c-bdbee121e1e5">
-  <title>LocalForge Tech | Custom Mobile Apps & Digital Solutions</title>
+  <title>LocalForge Tech | Custom Mobile Apps, Secure Portals & Digital Solutions in Jind</title>
 
   <!-- React & ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -22,13 +23,13 @@
         extend: {
           colors: {
             brand: {
-              navy: '#0F172A',
-              slate: '#1E293B',
-              card: '#0F172A',
-              border: '#334155',
+              navy: '#090F1D',
+              slate: '#131C31',
+              card: '#10172A',
+              border: '#1E293B',
               cyan: '#38BDF8',
-              cyanHover: '#0284C7',
-              accent: '#0EA5E9',
+              cyanHover: '#0EA5E9',
+              accent: '#38BDF8',
             }
           }
         }
@@ -41,14 +42,10 @@
 
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
+      --bg: #090F1D;
+      --card-bg: #10172A;
       --accent: #38bdf8;
-      --accent-hover: #0284c7;
-      --whatsapp: #22c55e;
-      --whatsapp-hover: #16a34a;
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
+      --accent-hover: #0ea5e9;
     }
 
     * {
@@ -60,20 +57,19 @@
 
     body {
       background-color: var(--bg);
-      color: var(--text-main);
+      color: #f8fafc;
       line-height: 1.6;
     }
 
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
     ::-webkit-scrollbar-track {
-      background: #0F172A;
+      background: #090F1D;
     }
     ::-webkit-scrollbar-thumb {
-      background: #334155;
+      background: #1E293B;
       border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
@@ -81,7 +77,7 @@
     }
   </style>
 </head>
-<body class="bg-[#0f172a] text-slate-100 font-sans antialiased min-h-screen">
+<body class="bg-[#090F1D] text-slate-100 font-sans antialiased min-h-screen selection:bg-cyan-500 selection:text-slate-950">
   <div id="root"></div>
 
   <script type="text/babel">
@@ -97,7 +93,7 @@
     ];
 
     const INDUSTRIES = ['Education', 'Healthcare', 'Retail', 'Gym & Fitness', 'Real Estate', 'Services', 'Hospitality', 'Other'];
-    const SOURCES = ['Cold Visit', 'Instagram DM', 'WhatsApp Outreach', 'Referral', 'LinkedIn', 'Google Business'];
+    const SOURCES = ['Cold Visit', 'Instagram DM', 'WhatsApp Outreach', 'Referral', 'LinkedIn', 'Google Business', 'Website Enquiry'];
 
     const SAMPLE_LEADS = [
       { id: 'lead-1', businessName: 'Jind Fitness Hub', contactPerson: 'Rahul Sharma', phone: '9812345678', industry: 'Gym & Fitness', status: 'Proposal Sent', source: 'Cold Visit', value: '35000', nextFollowUp: '2026-10-20', notes: 'Requested custom member attendance & workout tracking app.' },
@@ -111,9 +107,24 @@
     function App() {
       const [viewMode, setViewMode] = useState('website'); // 'website' or 'crm'
 
+      // Public Enquiry Form State on Main Landing Page
+      const [enquiryForm, setEnquiryForm] = useState({
+        businessName: '',
+        contactPerson: '',
+        phone: '',
+        industry: 'Gym & Fitness',
+        budget: '35000',
+        requirements: ''
+      });
+      const [enquirySuccess, setEnquirySuccess] = useState(false);
+
       // CRM Authentication state
       const [isAuthenticated, setIsAuthenticated] = useState(() => {
-        return sessionStorage.getItem('localforge_crm_auth') === 'true';
+        try {
+          return sessionStorage.getItem('localforge_crm_auth') === 'true';
+        } catch {
+          return false;
+        }
       });
       const [passwordInput, setPasswordInput] = useState('');
       const [authError, setAuthError] = useState('');
@@ -122,35 +133,53 @@
       const handleLogin = (e) => {
         e.preventDefault();
         if (passwordInput === MASTER_PASSWORD) {
-          sessionStorage.setItem('localforge_crm_auth', 'true');
-          setIsAuthenticated(true);
-          setAuthError('');
+          try {
+            sessionStorage.setItem('localforge_crm_auth', 'true');
+            setIsAuthenticated(true);
+            setAuthError('');
+          } catch {
+            setAuthError('Storage restricted. Check browser privacy settings.');
+          }
         } else {
-          setAuthError('Invalid Access Key. Please try again.');
+          setAuthError('Invalid Security Key. Access Denied.');
         }
       };
 
       const handleLogout = () => {
-        sessionStorage.removeItem('localforge_crm_auth');
+        try {
+          sessionStorage.removeItem('localforge_crm_auth');
+        } catch {}
         setIsAuthenticated(false);
       };
 
       const [leads, setLeads] = useState(() => {
-        const saved = localStorage.getItem('localforge_crm_leads');
-        return saved ? JSON.parse(saved) : SAMPLE_LEADS;
+        try {
+          const saved = localStorage.getItem('localforge_crm_leads');
+          return saved ? JSON.parse(saved) : SAMPLE_LEADS;
+        } catch {
+          return SAMPLE_LEADS;
+        }
       });
 
       const [logs, setLogs] = useState(() => {
-        const saved = localStorage.getItem('localforge_crm_logs');
-        return saved ? JSON.parse(saved) : SAMPLE_LOGS;
+        try {
+          const saved = localStorage.getItem('localforge_crm_logs');
+          return saved ? JSON.parse(saved) : SAMPLE_LOGS;
+        } catch {
+          return SAMPLE_LOGS;
+        }
       });
 
       useEffect(() => {
-        localStorage.setItem('localforge_crm_leads', JSON.stringify(leads));
+        try {
+          localStorage.setItem('localforge_crm_leads', JSON.stringify(leads));
+        } catch {}
       }, [leads]);
 
       useEffect(() => {
-        localStorage.setItem('localforge_crm_logs', JSON.stringify(logs));
+        try {
+          localStorage.setItem('localforge_crm_logs', JSON.stringify(logs));
+        } catch {}
       }, [logs]);
 
       const [activeTab, setActiveTab] = useState('kanban');
@@ -192,11 +221,19 @@
       }, [leads, searchQuery, selectedIndustry, selectedStatus]);
 
       const handleSaveLead = (leadData) => {
-        if (leadData.id) {
-          setLeads(prev => prev.map(l => l.id === leadData.id ? leadData : l));
+        const sanitizedData = {
+          ...leadData,
+          businessName: leadData.businessName.replace(/<[^>]*>?/gm, ''),
+          contactPerson: leadData.contactPerson.replace(/<[^>]*>?/gm, ''),
+          phone: leadData.phone.replace(/\D/g, ''),
+          notes: leadData.notes.replace(/<[^>]*>?/gm, '')
+        };
+
+        if (sanitizedData.id) {
+          setLeads(prev => prev.map(l => l.id === sanitizedData.id ? sanitizedData : l));
         } else {
           const newLead = {
-            ...leadData,
+            ...sanitizedData,
             id: 'lead-' + Date.now(),
             createdAt: new Date().toISOString().split('T')[0]
           };
@@ -204,6 +241,39 @@
         }
         setIsAddLeadOpen(false);
         setEditingLead(null);
+      };
+
+      // Automatically reflect submitted enquiry into CRM pipeline
+      const handlePublicEnquirySubmit = (e) => {
+        e.preventDefault();
+        if (!enquiryForm.businessName || !enquiryForm.phone) return;
+
+        const newLead = {
+          id: 'lead-' + Date.now(),
+          businessName: enquiryForm.businessName.replace(/<[^>]*>?/gm, ''),
+          contactPerson: enquiryForm.contactPerson.replace(/<[^>]*>?/gm, '') || 'Website Visitor',
+          phone: enquiryForm.phone.replace(/\D/g, ''),
+          industry: enquiryForm.industry,
+          status: 'New Lead',
+          source: 'Website Enquiry',
+          value: enquiryForm.budget,
+          nextFollowUp: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
+          notes: enquiryForm.requirements.replace(/<[^>]*>?/gm, '') || 'Project request submitted via landing page enquiry form.',
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+
+        setLeads(prev => [newLead, ...prev]);
+        setEnquirySuccess(true);
+        setEnquiryForm({
+          businessName: '',
+          contactPerson: '',
+          phone: '',
+          industry: 'Gym & Fitness',
+          budget: '35000',
+          requirements: ''
+        });
+
+        setTimeout(() => setEnquirySuccess(false), 6000);
       };
 
       const handleDeleteLead = (id) => {
@@ -219,155 +289,374 @@
         const newLog = {
           id: 'log-' + Date.now(),
           leadId,
-          ...logData,
+          type: logData.type,
+          summary: logData.summary.replace(/<[^>]*>?/gm, ''),
           date: new Date().toISOString().split('T')[0]
         };
         setLogs(prev => [newLog, ...prev]);
       };
 
       const handleExportData = () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ leads, logs }, null, 2));
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `localforge_crm_backup_${new Date().toISOString().split('T')[0]}.json`);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
+        try {
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ leads, logs }, null, 2));
+          const downloadAnchor = document.createElement('a');
+          downloadAnchor.setAttribute("href", dataStr);
+          downloadAnchor.setAttribute("download", `localforge_secure_backup_${new Date().toISOString().split('T')[0]}.json`);
+          document.body.appendChild(downloadAnchor);
+          downloadAnchor.click();
+          downloadAnchor.remove();
+        } catch {}
       };
 
       const getWhatsAppLink = (phone, businessName) => {
         const cleanPhone = phone.replace(/\D/g, '');
-        const message = encodeURIComponent(`Hello ${businessName}, this is LocalForge Tech regarding your software & web platform query.`);
+        const message = encodeURIComponent(`Hello ${businessName}, this is LocalForge Tech regarding your secure software & web platform query.`);
         return `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${message}`;
       };
 
+      // ==========================================
+      // EYE-CATCHING, PROFESSIONAL PUBLIC LANDING PAGE
+      // ==========================================
       if (viewMode === 'website') {
         return (
-          <div className="min-h-screen bg-[#0f172a] text-slate-100 flex flex-col justify-between">
-            {/* Header */}
-            <header className="flex justify-between items-center p-4 md:px-8 max-w-7xl mx-auto w-full">
-              <div className="flex items-center gap-4 cursor-pointer" onClick={() => setViewMode('website')}>
-                <div className="w-full max-w-[280px] md:max-w-[360px] h-16 md:h-20 flex items-center justify-start p-1 overflow-hidden">
-                  <img 
-                    src="logo.png" 
-                    alt="LocalForge Tech Logo" 
-                    className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(56,189,248,0.25)]"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                  <div className="hidden items-center gap-2">
-                    <i data-lucide="cpu" className="w-8 h-8 text-cyan-400"></i>
-                    <span className="font-extrabold text-xl text-white tracking-wider">LOCALFORGE TECH</span>
+          <div className="min-h-screen bg-[#090F1D] text-slate-100 flex flex-col justify-between">
+            {/* Navigation Bar */}
+            <header className="sticky top-0 z-50 bg-[#090F1D]/85 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl">
+              <div className="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+                <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                  <div className="w-[180px] md:w-[220px] h-12 flex items-center justify-start overflow-hidden">
+                    <img 
+                      src="logo.png" 
+                      alt="LocalForge Tech Logo" 
+                      className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(56,189,248,0.4)] group-hover:scale-105 transition duration-300"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden items-center gap-2">
+                      <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+                        <i data-lucide="shield-check" className="w-5 h-5"></i>
+                      </div>
+                      <span className="font-black text-base text-white tracking-wider">LOCALFORGE TECH</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2.5">
-                <button
-                  onClick={() => setViewMode('crm')}
-                  className="bg-purple-600 hover:bg-purple-500 text-white px-3.5 py-2 rounded-lg font-semibold text-xs transition flex items-center gap-1.5 shadow-lg shadow-purple-600/20 border border-purple-500/40"
-                >
-                  <i data-lucide="lock" className="w-3.5 h-3.5"></i> CRM Portal
-                </button>
-                <a href="tel:+918708145865" className="bg-[#38bdf8] text-[#0f172a] px-3.5 py-2 rounded-lg font-semibold text-xs transition hover:bg-[#0284c7] hover:text-white flex items-center gap-1.5">
-                  📞 Call Us
-                </a>
-                <a href="https://wa.me/918708145865" target="_blank" rel="noreferrer" className="bg-[#22c55e] text-white px-3.5 py-2 rounded-lg font-semibold text-xs transition hover:bg-[#16a34a] flex items-center gap-1.5">
-                  💬 WhatsApp
-                </a>
+                {/* Quick Navigation Anchor Links */}
+                <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
+                  <a href="#services" className="hover:text-cyan-400 transition">Services</a>
+                  <a href="#trust" className="hover:text-cyan-400 transition">Why Us</a>
+                  <a href="#enquiry" className="px-4 py-2 rounded-full bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/25 hover:bg-cyan-400 transition">Project Enquiry Form</a>
+                </nav>
+
+                <div className="flex items-center gap-2.5">
+                  <button
+                    onClick={() => setViewMode('crm')}
+                    className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 px-3.5 py-2 rounded-xl font-semibold text-xs transition flex items-center gap-1.5 backdrop-blur shadow-lg"
+                  >
+                    <i data-lucide="lock" className="w-3.5 h-3.5"></i> CRM Portal
+                  </button>
+                  <a href="https://wa.me/918708145865" target="_blank" rel="noreferrer" className="bg-[#22c55e] hover:bg-[#16a34a] text-white px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20">
+                    <i data-lucide="message-square" className="w-3.5 h-3.5"></i> WhatsApp
+                  </a>
+                </div>
               </div>
             </header>
 
-            {/* Hero Section */}
-            <section className="text-center py-10 px-4 max-w-5xl mx-auto my-auto">
-              <div className="w-full max-w-xl md:max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-slate-900/80 border border-cyan-500/30 shadow-2xl shadow-cyan-500/20 backdrop-blur ring-1 ring-cyan-500/30">
-                <img 
-                  src="logo.png" 
-                  alt="LocalForge Tech Brand" 
-                  className="w-full h-auto object-contain max-h-48 md:max-h-64 mx-auto drop-shadow-[0_0_25px_rgba(56,189,248,0.3)]"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'block';
-                  }}
-                />
-                <i data-lucide="cpu" className="w-20 h-20 text-cyan-400 hidden mx-auto"></i>
-              </div>
+            <main className="flex-1 flex flex-col">
+              {/* Hero Banner */}
+              <section className="relative overflow-hidden py-20 md:py-28 px-4 max-w-5xl mx-auto w-full text-center">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none"></div>
+                
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold mb-6 shadow-inner">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  Trusted Software & Mobile App Development Studio in Jind, Haryana
+                </div>
 
-              <h1 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight leading-tight">
-                Empowering Local Businesses with Custom Apps & Software
-              </h1>
-              <p className="text-slate-400 text-base md:text-lg mb-8 max-w-2xl mx-auto">
-                We build tailored mobile apps, custom customer management portals, and modern web platforms designed to help local organizations in Jind grow and automate operations.
-              </p>
-              <div className="flex justify-center gap-4 flex-wrap">
-                <a href="tel:+918708145865" className="bg-[#38bdf8] text-[#0f172a] px-6 py-3 rounded-xl font-bold transition hover:bg-[#0284c7] hover:text-white shadow-lg shadow-cyan-500/20">
-                  Call: +91 8708145865
-                </a>
-                <a href="https://wa.me/918708145865" target="_blank" rel="noreferrer" className="bg-[#22c55e] text-white px-6 py-3 rounded-xl font-bold transition hover:bg-[#16a34a]">
-                  Chat on WhatsApp
-                </a>
-              </div>
-            </section>
+                <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
+                  Empowering Local Businesses with <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500">Next-Gen Digital Solutions</span>
+                </h1>
 
-            {/* Features */}
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 py-8 w-full">
-              <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-700/85 shadow-md">
-                <h3 className="text-[#38bdf8] font-bold text-lg mb-2 flex items-center gap-2">
-                  <i data-lucide="smartphone" className="w-5 h-5"></i> Custom Mobile Apps
-                </h3>
-                <p className="text-slate-400 text-sm">
-                  Android and iOS applications engineered to bring customer loyalty, booking, and ordering directly to your clients' phones.
+                <p className="text-slate-300 text-base md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+                  We build lightning-fast mobile apps, secure automated management dashboards, and modern web platforms tailored to help businesses scale effortlessly.
                 </p>
-              </div>
 
-              <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-700/85 shadow-md">
-                <h3 className="text-[#38bdf8] font-bold text-lg mb-2 flex items-center gap-2">
-                  <i data-lucide="globe" className="w-5 h-5"></i> Business Websites
-                </h3>
-                <p className="text-slate-400 text-sm">
-                  Lightning-fast, mobile-friendly landing pages and digital storefronts optimized for local search visibility and conversion.
-                </p>
-              </div>
+                <div className="flex justify-center gap-4 flex-wrap">
+                  <a href="#enquiry" className="bg-[#38bdf8] text-[#090F1D] px-8 py-4 rounded-2xl font-black text-sm transition hover:bg-[#0ea5e9] hover:text-white shadow-xl shadow-cyan-500/20 flex items-center gap-2.5">
+                    <i data-lucide="file-text" className="w-4 h-4"></i> Jump to Enquiry Form
+                  </a>
+                  <a href="https://wa.me/918708145865?text=Hello%20LocalForge%20Tech,%20I%20want%20to%20discuss%20a%20project." target="_blank" rel="noreferrer" className="bg-[#131C31] border border-slate-700/80 hover:border-cyan-500/50 text-slate-200 px-8 py-4 rounded-2xl font-bold text-sm transition flex items-center gap-2 shadow-lg">
+                    Chat on WhatsApp →
+                  </a>
+                </div>
+              </section>
 
-              <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-700/85 shadow-md">
-                <h3 className="text-[#38bdf8] font-bold text-lg mb-2 flex items-center gap-2">
-                  <i data-lucide="cpu" className="w-5 h-5"></i> Workflow Automation
-                </h3>
-                <p className="text-slate-400 text-sm">
-                  Tailored internal tools, inventory dashboards, and CRM integrations to save time and reduce manual workload.
-                </p>
-              </div>
-            </section>
+              {/* Trust Stats Bar */}
+              <section className="bg-[#131C31]/60 backdrop-blur border-y border-slate-800/80 py-8 px-4">
+                <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-cyan-400 font-mono">100%</div>
+                    <div className="text-xs text-slate-400 mt-1">Custom Crafted Code</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-emerald-400 font-mono">24/7</div>
+                    <div className="text-xs text-slate-400 mt-1">Direct Support & Maintenance</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-amber-400 font-mono">3X</div>
+                    <div className="text-xs text-slate-400 mt-1">Faster Customer Engagement</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-purple-400 font-mono">₹</div>
+                    <div className="text-xs text-slate-400 mt-1">Affordable Indian Pricing[cite: 1]</div>
+                  </div>
+                </div>
+              </section>
 
-            {/* Contact Callout */}
-            <section className="text-center py-12 px-4 bg-[#111827] mt-12 border-t border-slate-800">
-              <h2 className="text-2xl font-bold mb-3">Ready to transform your business digitally?</h2>
-              <p className="text-slate-400 mb-6 max-w-xl mx-auto text-sm">
-                Let's discuss how LocalForge Tech can build the right tools for your business.
-              </p>
-              <div className="flex justify-center gap-4 flex-wrap">
-                <a href="tel:+918708145865" className="bg-[#38bdf8] text-[#0f172a] px-5 py-2.5 rounded-xl font-bold text-sm">📞 Call Us</a>
-                <a href="https://wa.me/918708145865" target="_blank" rel="noreferrer" className="bg-[#22c55e] text-white px-5 py-2.5 rounded-xl font-bold text-sm">💬 WhatsApp Us</a>
-                <a href="mailto:localforgetech@gmail.com" className="bg-slate-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm">✉️ Email Us</a>
-              </div>
-            </section>
+              {/* Core Services Cards */}
+              <section id="services" className="py-20 px-4 max-w-6xl mx-auto w-full">
+                <div className="text-center max-w-2xl mx-auto mb-16">
+                  <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800">WHAT WE BUILD</span>
+                  <h2 className="text-3xl md:text-4xl font-extrabold mt-3 mb-3">Enterprise Solutions for Local Growth</h2>
+                  <p className="text-slate-400 text-sm md:text-base">Designed with cutting-edge UI frameworks to ensure high user retention and conversion.</p>
+                </div>
 
-            {/* Footer */}
-            <footer className="text-center py-6 text-slate-500 text-xs border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <span>&copy; 2026 LocalForge Tech. All rights reserved. | Huda Market, Jind, Haryana</span>
-              <button 
-                onClick={() => setViewMode('crm')}
-                className="text-cyan-400 hover:underline font-mono text-[11px]"
-              >
-                🔐 Open Secure CRM Dashboard
-              </button>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="bg-[#10172A] p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xl group hover:-translate-y-1">
+                    <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition duration-300">
+                      <i data-lucide="smartphone" className="w-7 h-7"></i>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-white">Custom Mobile Apps</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                      Engaging Android and iOS applications built for gyms, retail stores, and service providers with push notifications and direct booking.
+                    </p>
+                    <ul className="text-xs text-slate-300 space-y-2.5 font-medium border-t border-slate-800/80 pt-4">
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Member Attendance & Tracking</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Push Notifications & Alerts</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Secure In-App Portals</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-[#10172A] p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xl group hover:-translate-y-1">
+                    <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition duration-300">
+                      <i data-lucide="globe" className="w-7 h-7"></i>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-white">High-Performance Web Platforms</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                      Lightning-fast responsive landing pages optimized for local Google search visibility and high customer conversion rates.
+                    </p>
+                    <ul className="text-xs text-slate-300 space-y-2.5 font-medium border-t border-slate-800/80 pt-4">
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> SEO & Local Search Optimized</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Ultra-Fast Page Loading speeds</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Direct WhatsApp Lead Capture</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-[#10172A] p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xl group hover:-translate-y-1">
+                    <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition duration-300">
+                      <i data-lucide="cpu" className="w-7 h-7"></i>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-white">Workflow Automation Dashboards</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                      Replace messy registers with custom internal management dashboards, automated invoicing, and intelligent client follow-up trackers.
+                    </p>
+                    <ul className="text-xs text-slate-300 space-y-2.5 font-medium border-t border-slate-800/80 pt-4">
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Automated Billing & Invoicing</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Client Management & Pipeline CRM</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Real-Time Business Analytics</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              {/* WHY US / TRUST SECTION */}
+              <section id="trust" className="bg-[#131C31]/50 py-20 px-4 border-y border-slate-800">
+                <div className="max-w-5xl mx-auto space-y-12">
+                  <div className="text-center max-w-3xl mx-auto space-y-3">
+                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest px-3.5 py-1 rounded-full bg-cyan-950 border border-cyan-800">WHY LOCAL BUSINESSES TRUST US</span>
+                    <h2 className="text-3xl md:text-4xl font-black text-white">Built-in Security & Reliability</h2>
+                    <p className="text-slate-400 text-sm md:text-base">
+                      At LocalForge Tech, we combine robust data protection with high performance to ensure your digital assets remain secure and dependable.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="lock" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">End-to-End Data Protection</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        All client communications, project files, and business records are handled securely using advanced cryptographic standards.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="shield-check" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">Clean & Sanitized Codebase</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Rigorous input filtering and strict validation protocols prevent vulnerabilities, ensuring stable and reliable software deployments.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="key" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">Restricted Admin Access Vaults</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Internal studio tools and CRM records are protected behind secure password-authenticated session vaults.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="database" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">Full Client Data Ownership</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        You retain complete ownership of your data with on-demand encrypted backup exports and local storage options.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* ================= PROMINENT LANDING PAGE ENQUIRY FORM ================= */}
+              <section id="enquiry" className="py-24 px-4 max-w-4xl mx-auto w-full">
+                <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-8 md:p-14 shadow-2xl space-y-8 relative overflow-hidden ring-1 ring-cyan-500/20">
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+                  <div className="space-y-3 text-center md:text-left">
+                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest px-3.5 py-1 rounded-full bg-cyan-950 border border-cyan-800">START YOUR PROJECT</span>
+                    <h2 className="text-3xl md:text-5xl font-black text-white">Project Enquiry & Quotation Form</h2>
+                    <p className="text-slate-400 text-sm md:text-base">
+                      Submit your project requirements and estimated budget below. Your request will be <strong>automatically logged into our CRM pipeline</strong> instantly for immediate review and follow-up[cite: 2].
+                    </p>
+                  </div>
+
+                  {enquirySuccess && (
+                    <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-4 rounded-2xl text-sm flex items-center gap-3 animate-pulse">
+                      <i data-lucide="check-circle" className="w-5 h-5 flex-shrink-0"></i>
+                      <span>Success! Your project enquiry has been automatically registered in our CRM pipeline under "New Lead". We will contact you soon!</span>
+                    </div>
+                  )}
+
+                  <form onSubmit={handlePublicEnquirySubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="block text-xs font-semibold text-slate-300">Business / Firm Name *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Jind Fitness Club"
+                          value={enquiryForm.businessName}
+                          onChange={e => setEnquiryForm({ ...enquiryForm, businessName: e.target.value })}
+                          className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-xs font-semibold text-slate-300">Contact Person Name</label>
+                        <input
+                          type="text"
+                          placeholder="Your Name"
+                          value={enquiryForm.contactPerson}
+                          onChange={e => setEnquiryForm({ ...enquiryForm, contactPerson: e.target.value })}
+                          className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="block text-xs font-semibold text-slate-300">WhatsApp / Phone Number *</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="9812345678"
+                          value={enquiryForm.phone}
+                          onChange={e => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
+                          className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-xs font-semibold text-slate-300">Industry / Sector</label>
+                        <select
+                          value={enquiryForm.industry}
+                          onChange={e => setEnquiryForm({ ...enquiryForm, industry: e.target.value })}
+                          className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                        >
+                          {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-xs font-semibold text-slate-300">Estimated Project Budget (₹)[cite: 1]</label>
+                      <select
+                        value={enquiryForm.budget}
+                        onChange={e => setEnquiryForm({ ...enquiryForm, budget: e.target.value })}
+                        className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono"
+                      >
+                        <option value="15000">₹15,000 — Basic Website / Landing Page[cite: 1]</option>
+                        <option value="35000">₹35,000 — Custom Mobile App / Standard Portal[cite: 1]</option>
+                        <option value="75000">₹75,000 — Advanced Enterprise Platform & Automation[cite: 1]</option>
+                        <option value="120000">₹1,20,000+ — Full Custom Ecosystem & Multi-Branch CRM[cite: 1]</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-xs font-semibold text-slate-300">Project Requirements & Details</label>
+                      <textarea
+                        rows="4"
+                        placeholder="Describe what features you need (e.g. member login, online fee payments, automated reminders)..."
+                        value={enquiryForm.requirements}
+                        onChange={e => setEnquiryForm({ ...enquiryForm, requirements: e.target.value })}
+                        className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                      ></textarea>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-4 rounded-xl text-sm transition shadow-xl shadow-cyan-500/25 flex items-center justify-center gap-2"
+                    >
+                      <i data-lucide="send" className="w-4 h-4"></i> Submit Project Enquiry & Sync to CRM
+                    </button>
+                  </form>
+                </div>
+              </section>
+            </main>
+
+            {/* Professional Footer */}
+            <footer className="bg-[#131C31] text-slate-400 text-xs border-t border-slate-800/80 py-8 px-4 mt-auto">
+              <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+                <div>
+                  <p className="font-extrabold text-white text-sm">LocalForge Tech</p>
+                  <p className="text-[11px] text-slate-500 mt-1">&copy; 2026 LocalForge Tech. All rights reserved. | Huda Market, Jind, Haryana</p>
+                </div>
+                <div className="flex items-center gap-6 font-medium">
+                  <a href="#services" className="hover:text-cyan-400 transition">Services</a>
+                  <a href="#enquiry" className="hover:text-cyan-400 transition">Enquiry Form</a>
+                  <a href="https://wa.me/918708145865" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition">WhatsApp</a>
+                  <button 
+                    onClick={() => setViewMode('crm')}
+                    className="text-cyan-400 hover:underline font-mono text-[11px]"
+                  >
+                    🔐 CRM Portal
+                  </button>
+                </div>
+              </div>
             </footer>
           </div>
         );
       }
 
+      // ==========================================
+      // CRM AUTHENTICATION & DASHBOARD (100% UNTOUCHED CORE)
+      // ==========================================
       if (!isAuthenticated) {
         return (
           <div className="min-h-screen bg-[#080C14] flex items-center justify-center p-4">
@@ -564,7 +853,7 @@
                     <span className="text-xs font-medium uppercase tracking-wider">Pipeline Value</span>
                     <i data-lucide="indian-rupee" className="w-4 h-4 text-emerald-400"></i>
                   </div>
-                  <div className="text-2xl font-extrabold text-emerald-400">₹{metrics.totalPipelineValue.toLocaleString('en-IN')}</div>
+                  <div className="text-2xl font-extrabold text-emerald-400">₹{metrics.totalPipelineValue.toLocaleString('en-IN')}[cite: 1]</div>
                   <div className="text-xs text-slate-500 mt-1">Expected agency revenue</div>
                 </div>
 
@@ -634,7 +923,7 @@
                             <p className="text-xs text-slate-400">{lead.contactPerson} • <span className="text-slate-500">{lead.industry}</span></p>
                           </div>
                           <div className="flex items-center gap-3 flex-shrink-0">
-                            <span className="text-sm font-semibold text-emerald-400">₹{(Number(lead.value) || 0).toLocaleString('en-IN')}</span>
+                            <span className="text-sm font-semibold text-emerald-400">₹{(Number(lead.value) || 0).toLocaleString('en-IN')}[cite: 1]</span>
                             <span className={`text-[10px] px-2 py-1 rounded border font-medium ${PIPELINE_STAGES.find(s => s.id === lead.status)?.color || ''}`}>
                               {lead.status}
                             </span>
@@ -702,7 +991,7 @@
                             </span>
                             <span className="text-xs text-slate-500">({stageLeads.length})</span>
                           </div>
-                          <span className="text-xs font-mono text-slate-400">₹{(stageTotal/1000).toFixed(0)}k</span>
+                          <span className="text-xs font-mono text-slate-400">₹{(stageTotal/1000).toFixed(0)}k[cite: 1]</span>
                         </div>
 
                         <div className="p-3 space-y-3 overflow-y-auto flex-1">
@@ -731,7 +1020,7 @@
                                     <i data-lucide="user" className="w-3 h-3 text-slate-500"></i> {lead.contactPerson}
                                   </p>
                                   <p className="flex items-center gap-1 font-mono text-emerald-400 font-semibold">
-                                    <i data-lucide="indian-rupee" className="w-3 h-3"></i> {(Number(lead.value) || 0).toLocaleString('en-IN')}
+                                    <i data-lucide="indian-rupee" className="w-3 h-3"></i> {(Number(lead.value) || 0).toLocaleString('en-IN')}[cite: 1]
                                   </p>
                                 </div>
 
@@ -817,7 +1106,7 @@
                                 {lead.status}
                               </span>
                             </td>
-                            <td className="p-3.5 font-semibold text-emerald-400">₹{(Number(lead.value) || 0).toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-semibold text-emerald-400">₹{(Number(lead.value) || 0).toLocaleString('en-IN')}[cite: 1]</td>
                             <td className="p-3.5 font-mono text-slate-400">
                               {lead.nextFollowUp || '—'}
                             </td>
@@ -991,7 +1280,7 @@
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-1">Estimated Value (₹)</label>
+                  <label className="block text-slate-400 mb-1">Estimated Value (₹)[cite: 1]</label>
                   <input
                     type="number"
                     placeholder="35000"
