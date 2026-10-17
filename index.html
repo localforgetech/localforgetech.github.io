@@ -1454,8 +1454,7 @@
       );
     }
 
-    const root = ReactDOM.createRoot(getElementById ? document.getElementById('root') : document.getElementById('root'));
-    root.render(<App />);
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
 </html>
