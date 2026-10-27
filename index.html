@@ -1,234 +1,1460 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LocalForge Tech Hub & CRMs</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
-    <div id="root"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://unpkg.com https://cdn.tailwindcss.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' https:;">
+  <meta name="impact-site-verification" value="80ed49c7-ca80-40b3-803c-bdbee121e1e5">
+  <title>LocalForge Tech | Custom Mobile Apps, Secure Portals & Digital Solutions in Jind</title>
 
-    <script type="text/babel">
-        function App() {
-            // State to switch between CRMs: 'main' (your original CRM) or 'license' (the new License CRM)
-            const [activeCRM, setActiveCRM] = React.useState('main');
+  <!-- React & ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 
-            // --- License CRM State ---
-            const [licenses, setLicenses] = React.useState([
-                { id: 1, client: "Rahul Sharma", app: "LocalForge POS", key: "LF-9X2K-4M8P-7Q1W", status: "Active", phone: "919876543210", expiry: "2027-10-25" },
-                { id: 2, client: "Aman Verma", app: "LocalForge Billing", key: "LF-3B5N-8V6C-2X9Z", status: "Pending", phone: "918708145865", expiry: "2026-11-15" }
-            ]);
-            const [requests, setRequests] = React.useState([
-                { id: 101, client: "Vikram Singh", app: "LocalForge POS", phone: "919123456789", time: "2 mins ago" }
-            ]);
-            const [newClient, setNewClient] = React.useState("");
-            const [newPhone, setNewPhone] = React.useState("");
-            const [selectedApp, setSelectedApp] = React.useState("LocalForge POS");
+  <!-- Babel for JSX compilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-            // --- Main Website CRM State (Placeholder for your existing client/project CRM) ---
-            const [mainClients, setMainClients] = React.useState([
-                { id: 1, name: "City Supermarket", project: "Custom POS App", status: "In Progress", value: "₹45,000" },
-                { id: 2, name: "Apex Logistics", project: "Inventory Tracker", status: "Completed", value: "₹30,000" }
-            ]);
-
-            const generateKey = (clientName, phone) => {
-                const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
-                const key = `LF-${Math.floor(1000 + Math.random() * 9000)}-${randomPart}-${Math.floor(1000 + Math.random() * 9000)}`;
-                
-                const newLicense = {
-                    id: Date.now(),
-                    client: clientName || "Direct Client",
-                    app: selectedApp,
-                    key: key,
-                    status: "Active",
-                    phone: phone || "910000000000",
-                    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0]
-                };
-
-                setLicenses([newLicense, ...licenses]);
-                if (phone) {
-                    const message = encodeURIComponent(`Hello ${clientName}! Your license key for ${selectedApp} is: ${key}. Valid until ${newLicense.expiry}. - LocalForge Tech`);
-                    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-                }
-            };
-
-            const fulfillRequest = (req) => {
-                generateKey(req.client, req.phone);
-                setRequests(requests.filter(r => r.id !== req.id));
-            };
-
-            return (
-                <div className="max-w-7xl mx-auto p-6">
-                    {/* Top Navigation & CRM Switcher Header */}
-                    <header className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-slate-800 pb-4 gap-4">
-                        <div>
-                            <h1 className="text-2xl font-bold text-indigo-400">LocalForge Tech Hub</h1>
-                            <p className="text-sm text-slate-400">Central Management Portal for Business & Software Licenses</p>
-                        </div>
-                        
-                        {/* CRM Switcher Buttons */}
-                        <div className="flex bg-slate-900 p-1.5 rounded-xl border border-slate-800">
-                            <button 
-                                onClick={() => setActiveCRM('main')}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${activeCRM === 'main' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}>
-                                📂 Main Client CRM
-                            </button>
-                            <button 
-                                onClick={() => setActiveCRM('license')}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${activeCRM === 'license' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}>
-                                🔑 License & WhatsApp CRM
-                            </button>
-                        </div>
-                    </header>
-
-                    {/* VIEW 1: MAIN WEBSITE CRM */}
-                    {activeCRM === 'main' && (
-                        <div>
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-semibold text-slate-200">Client Projects & Inquiries</h2>
-                                <span className="text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded text-indigo-300">Active Clients: {mainClients.length}</span>
-                            </div>
-
-                            <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-                                <table className="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr className="border-b border-slate-800 text-xs text-slate-400 uppercase bg-slate-950/50">
-                                            <th className="p-3">Client / Organization</th>
-                                            <th className="p-3">Project Type</th>
-                                            <th className="p-3">Status</th>
-                                            <th className="p-3">Project Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-800 text-sm">
-                                        {mainClients.map(c => (
-                                            <tr key={c.id} className="hover:bg-slate-800/50 transition">
-                                                <td className="p-3 font-medium text-slate-200">{c.name}</td>
-                                                <td className="p-3 text-slate-400">{c.project}</td>
-                                                <td className="p-3">
-                                                    <span className={`px-2 py-1 rounded text-xs border ${c.status === 'Completed' ? 'bg-emerald-950 text-emerald-400 border-emerald-800' : 'bg-amber-950 text-amber-400 border-amber-800'}`}>
-                                                        {c.status}
-                                                    </span>
-                                                </td>
-                                                <td className="p-3 font-semibold text-indigo-300">{c.value}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* VIEW 2: LICENSE KEY & WHATSAPP CRM */}
-                    {activeCRM === 'license' && (
-                        <div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-lg">
-                                    <h3 className="text-slate-400 text-sm font-medium">Total Active Licenses</h3>
-                                    <p className="text-3xl font-bold mt-2 text-indigo-400">{licenses.filter(l => l.status === 'Active').length}</p>
-                                </div>
-                                <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-lg">
-                                    <h3 className="text-slate-400 text-sm font-medium">Pending WhatsApp Requests</h3>
-                                    <p className="text-3xl font-bold mt-2 text-amber-400">{requests.length}</p>
-                                </div>
-                                <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-lg">
-                                    <h3 className="text-slate-400 text-sm font-medium">Quick Generate Key</h3>
-                                    <div className="mt-3 flex gap-2">
-                                        <input 
-                                            type="text" 
-                                            placeholder="Client Name" 
-                                            value={newClient} 
-                                            onChange={(e) => setNewClient(e.target.value)}
-                                            className="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-sm w-1/2 text-slate-200"
-                                        />
-                                        <input 
-                                            type="text" 
-                                            placeholder="Phone (91...)" 
-                                            value={newPhone} 
-                                            onChange={(e) => setNewPhone(e.target.value)}
-                                            className="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-sm w-1/2 text-slate-200"
-                                        />
-                                    </div>
-                                    <button 
-                                        onClick={() => { generateKey(newClient, newPhone); setNewClient(""); setNewPhone(""); }}
-                                        className="mt-3 w-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold py-2 rounded transition">
-                                        Issue & Send via WhatsApp
-                                    </button>
-                                </div>
-                            </div>
-
-                            {requests.length > 0 && (
-                                <div className="mb-8 bg-amber-950/20 border border-amber-900/50 p-4 rounded-xl">
-                                    <h2 className="text-lg font-semibold text-amber-400 mb-3">🔔 Incoming WhatsApp License Requests</h2>
-                                    <div className="space-y-3">
-                                        {requests.map(req => (
-                                            <div key={req.id} className="flex justify-between items-center bg-slate-900 p-3 rounded-lg border border-slate-800">
-                                                <div>
-                                                    <p className="font-semibold text-slate-200">{req.client} <span className="text-xs text-slate-400">({req.phone})</span></p>
-                                                    <p className="text-xs text-slate-500">Requested {req.app} • {req.time}</p>
-                                                </div>
-                                                <button 
-                                                    onClick={() => fulfillRequest(req)}
-                                                    className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded text-sm font-medium transition">
-                                                    Fulfill & Send Key 💬
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-                                <div className="p-4 border-b border-slate-800 font-semibold text-slate-200">Issued License Database</div>
-                                <table className="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr className="border-b border-slate-800 text-xs text-slate-400 uppercase bg-slate-950/50">
-                                            <th className="p-3">Client</th>
-                                            <th className="p-3">App Name</th>
-                                            <th className="p-3">License Key</th>
-                                            <th className="p-3">Expiry</th>
-                                            <th className="p-3">Status</th>
-                                            <th className="p-3 text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-800 text-sm">
-                                        {licenses.map(lic => (
-                                            <tr key={lic.id} className="hover:bg-slate-800/50 transition">
-                                                <td className="p-3 font-medium text-slate-200">{lic.client}</td>
-                                                <td className="p-3 text-slate-400">{lic.app}</td>
-                                                <td className="p-3 font-mono text-indigo-300">{lic.key}</td>
-                                                <td className="p-3 text-slate-400">{lic.expiry}</td>
-                                                <td className="p-3">
-                                                    <span className="px-2 py-1 rounded text-xs bg-emerald-950 text-emerald-400 border border-emerald-800">{lic.status}</span>
-                                                </td>
-                                                <td className="p-3 text-right">
-                                                    <button 
-                                                        onClick={() => {
-                                                            const msg = encodeURIComponent(`Hello ${lic.client}, your license key is: ${lic.key}`);
-                                                            window.open(`https://wa.me/${lic.phone}?text=${msg}`, '_blank');
-                                                        }}
-                                                        className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded transition">
-                                                        Resend WhatsApp 💬
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#090F1D',
+              slate: '#131C31',
+              card: '#10172A',
+              border: '#1E293B',
+              cyan: '#38BDF8',
+              cyanHover: '#0EA5E9',
+              accent: '#38BDF8',
+            }
+          }
         }
+      }
+    }
+  </script>
 
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg: #090F1D;
+      --card-bg: #10172A;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090F1D;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38BDF8;
+    }
+  </style>
+</head>
+<body class="bg-[#090F1D] text-slate-100 font-sans antialiased min-h-screen selection:bg-cyan-500 selection:text-slate-950">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const PIPELINE_STAGES = [
+      { id: 'New Lead', label: 'New Lead', color: 'border-cyan-500/50 bg-cyan-500/10 text-cyan-400' },
+      { id: 'Contacted', label: 'Contacted', color: 'border-blue-500/50 bg-blue-500/10 text-blue-400' },
+      { id: 'Meeting Scheduled', label: 'Meeting Scheduled', color: 'border-amber-500/50 bg-amber-500/10 text-amber-400' },
+      { id: 'Proposal Sent', label: 'Proposal Sent', color: 'border-purple-500/50 bg-purple-500/10 text-purple-400' },
+      { id: 'Closed Won', label: 'Closed Won', color: 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400' },
+      { id: 'Closed Lost', label: 'Closed Lost', color: 'border-rose-500/50 bg-rose-500/10 text-rose-400' }
+    ];
+
+    const INDUSTRIES = ['Education', 'Healthcare', 'Retail', 'Gym & Fitness', 'Real Estate', 'Services', 'Hospitality', 'Other'];
+    const SOURCES = ['Cold Visit', 'Instagram DM', 'WhatsApp Outreach', 'Referral', 'LinkedIn', 'Google Business', 'Website Enquiry'];
+
+    const SAMPLE_LEADS = [
+      { id: 'lead-1', businessName: 'Jind Fitness Hub', contactPerson: 'Rahul Sharma', phone: '9812345678', industry: 'Gym & Fitness', status: 'Proposal Sent', source: 'Cold Visit', value: '35000', nextFollowUp: '2026-10-20', notes: 'Requested custom member attendance & workout tracking app.' },
+      { id: 'lead-2', businessName: 'Haryana Global Academy', contactPerson: 'Dr. V. K. Verma', phone: '9416012345', industry: 'Education', status: 'Meeting Scheduled', source: 'Referral', value: '75000', nextFollowUp: '2026-10-18', notes: 'School fee collection portal and student ID app demo.' }
+    ];
+
+    const SAMPLE_LOGS = [
+      { id: 'log-1', leadId: 'lead-1', type: 'In-Person Meeting', summary: 'Met at gym, discussed integration requirements.', date: '2026-10-12' }
+    ];
+
+    function App() {
+      const [viewMode, setViewMode] = useState('website'); // 'website' or 'crm'
+
+      // Public Enquiry Form State on Main Landing Page
+      const [enquiryForm, setEnquiryForm] = useState({
+        businessName: '',
+        contactPerson: '',
+        phone: '',
+        industry: 'Gym & Fitness',
+        budget: '35000',
+        requirements: ''
+      });
+      const [enquirySuccess, setEnquirySuccess] = useState(false);
+      const [submittedClientName, setSubmittedClientName] = useState('');
+
+      // CRM Authentication state
+      const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        try {
+          return sessionStorage.getItem('localforge_crm_auth') === 'true';
+        } catch {
+          return false;
+        }
+      });
+      const [passwordInput, setPasswordInput] = useState('');
+      const [authError, setAuthError] = useState('');
+      const MASTER_PASSWORD = 'Admin@2001';
+
+      const handleLogin = (e) => {
+        e.preventDefault();
+        if (passwordInput === MASTER_PASSWORD) {
+          try {
+            sessionStorage.setItem('localforge_crm_auth', 'true');
+            setIsAuthenticated(true);
+            setAuthError('');
+          } catch {
+            setAuthError('Storage restricted. Check browser privacy settings.');
+          }
+        } else {
+          setAuthError('Invalid Security Key. Access Denied.');
+        }
+      };
+
+      const handleLogout = () => {
+        try {
+          sessionStorage.removeItem('localforge_crm_auth');
+        } catch {}
+        setIsAuthenticated(false);
+      };
+
+      const [leads, setLeads] = useState(() => {
+        try {
+          const saved = localStorage.getItem('localforge_crm_leads');
+          return saved ? JSON.parse(saved) : SAMPLE_LEADS;
+        } catch {
+          return SAMPLE_LEADS;
+        }
+      });
+
+      const [logs, setLogs] = useState(() => {
+        try {
+          const saved = localStorage.getItem('localforge_crm_logs');
+          return saved ? JSON.parse(saved) : SAMPLE_LOGS;
+        } catch {
+          return SAMPLE_LOGS;
+        }
+      });
+
+      useEffect(() => {
+        try {
+          localStorage.setItem('localforge_crm_leads', JSON.stringify(leads));
+        } catch {}
+      }, [leads]);
+
+      useEffect(() => {
+        try {
+          localStorage.setItem('localforge_crm_logs', JSON.stringify(logs));
+        } catch {}
+      }, [logs]);
+
+      const [activeTab, setActiveTab] = useState('kanban');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedIndustry, setSelectedIndustry] = useState('All');
+      const [selectedStatus, setSelectedStatus] = useState('All');
+
+      const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+      const [editingLead, setEditingLead] = useState(null);
+      const [activeLogLead, setActiveLogLead] = useState(null);
+
+      useEffect(() => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      });
+
+      const metrics = useMemo(() => {
+        const totalLeads = leads.length;
+        const activeDeals = leads.filter(l => l.status !== 'Closed Won' && l.status !== 'Closed Lost').length;
+        const totalPipelineValue = leads
+          .filter(l => l.status !== 'Closed Lost')
+          .reduce((sum, l) => sum + (Number(l.value) || 0), 0);
+        const wonCount = leads.filter(l => l.status === 'Closed Won').length;
+        const conversionRate = totalLeads > 0 ? ((wonCount / totalLeads) * 100).toFixed(1) : '0';
+
+        return { totalLeads, activeDeals, totalPipelineValue, conversionRate };
+      }, [leads]);
+
+      const filteredLeads = useMemo(() => {
+        return leads.filter(lead => {
+          const matchesSearch = lead.businessName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                lead.contactPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                lead.phone.includes(searchQuery);
+          const matchesIndustry = selectedIndustry === 'All' || lead.industry === selectedIndustry;
+          const matchesStatus = selectedStatus === 'All' || lead.status === selectedStatus;
+          return matchesSearch && matchesIndustry && matchesStatus;
+        });
+      }, [leads, searchQuery, selectedIndustry, selectedStatus]);
+
+      const handleSaveLead = (leadData) => {
+        const sanitizedData = {
+          ...leadData,
+          businessName: leadData.businessName.replace(/<[^>]*>?/gm, ''),
+          contactPerson: leadData.contactPerson.replace(/<[^>]*>?/gm, ''),
+          phone: leadData.phone.replace(/\D/g, ''),
+          notes: leadData.notes.replace(/<[^>]*>?/gm, '')
+        };
+
+        if (sanitizedData.id) {
+          setLeads(prev => prev.map(l => l.id === sanitizedData.id ? sanitizedData : l));
+        } else {
+          const newLead = {
+            ...sanitizedData,
+            id: 'lead-' + Date.now(),
+            createdAt: new Date().toISOString().split('T')[0]
+          };
+          setLeads(prev => [newLead, ...prev]);
+        }
+        setIsAddLeadOpen(false);
+        setEditingLead(null);
+      };
+
+      // Automatically reflect submitted enquiry into CRM pipeline and show success greeting card
+      const handlePublicEnquirySubmit = (e) => {
+        e.preventDefault();
+        if (!enquiryForm.businessName || !enquiryForm.phone) return;
+
+        const cleanBusiness = enquiryForm.businessName.replace(/<[^>]*>?/gm, '');
+        const cleanPerson = enquiryForm.contactPerson.replace(/<[^>]*>?/gm, '') || 'Valued Client';
+
+        const newLead = {
+          id: 'lead-' + Date.now(),
+          businessName: cleanBusiness,
+          contactPerson: cleanPerson,
+          phone: enquiryForm.phone.replace(/\D/g, ''),
+          industry: enquiryForm.industry,
+          status: 'New Lead',
+          source: 'Website Enquiry',
+          value: enquiryForm.budget,
+          nextFollowUp: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
+          notes: enquiryForm.requirements.replace(/<[^>]*>?/gm, '') || 'Project request submitted via landing page enquiry form.',
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+
+        setLeads(prev => [newLead, ...prev]);
+        setSubmittedClientName(cleanBusiness);
+        setEnquirySuccess(true);
+        setEnquiryForm({
+          businessName: '',
+          contactPerson: '',
+          phone: '',
+          industry: 'Gym & Fitness',
+          budget: '35000',
+          requirements: ''
+        });
+      };
+
+      const handleDeleteLead = (id) => {
+        setLeads(prev => prev.filter(l => l.id !== id));
+        setLogs(prev => prev.filter(log => log.leadId !== id));
+      };
+
+      const handleUpdateLeadStatus = (leadId, newStatus) => {
+        setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: newStatus } : l));
+      };
+
+      const handleAddLog = (leadId, logData) => {
+        const newLog = {
+          id: 'log-' + Date.now(),
+          leadId,
+          type: logData.type,
+          summary: logData.summary.replace(/<[^>]*>?/gm, ''),
+          date: new Date().toISOString().split('T')[0]
+        };
+        setLogs(prev => [newLog, ...prev]);
+      };
+
+      const handleExportData = () => {
+        try {
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ leads, logs }, null, 2));
+          const downloadAnchor = document.createElement('a');
+          downloadAnchor.setAttribute("href", dataStr);
+          downloadAnchor.setAttribute("download", `localforge_secure_backup_${new Date().toISOString().split('T')[0]}.json`);
+          document.body.appendChild(downloadAnchor);
+          downloadAnchor.click();
+          downloadAnchor.remove();
+        } catch {}
+      };
+
+      const getWhatsAppLink = (phone, businessName) => {
+        const cleanPhone = phone.replace(/\D/g, '');
+        const message = encodeURIComponent(`Hello ${businessName}, this is LocalForge Tech regarding your secure software & web platform query.`);
+        return `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${message}`;
+      };
+
+      // ==========================================
+      // EYE-CATCHING, PROFESSIONAL PUBLIC LANDING PAGE
+      // ==========================================
+      if (viewMode === 'website') {
+        return (
+          <div className="min-h-screen bg-[#090F1D] text-slate-100 flex flex-col justify-between">
+            {/* Navigation Bar */}
+            <header className="sticky top-0 z-50 bg-[#090F1D]/85 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl">
+              <div className="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+                <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                  <div className="w-[180px] md:w-[220px] h-12 flex items-center justify-start overflow-hidden">
+                    <img 
+                      src="logo.png" 
+                      alt="LocalForge Tech Logo" 
+                      className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(56,189,248,0.4)] group-hover:scale-105 transition duration-300"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden items-center gap-2">
+                      <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+                        <i data-lucide="shield-check" className="w-5 h-5"></i>
+                      </div>
+                      <span className="font-black text-base text-white tracking-wider">LOCALFORGE TECH</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Navigation Anchor Links */}
+                <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
+                  <a href="#services" className="hover:text-cyan-400 transition">Services</a>
+                  <a href="#trust" className="hover:text-cyan-400 transition">Why Us</a>
+                  <a href="#enquiry" className="px-4 py-2 rounded-full bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/25 hover:bg-cyan-400 transition">Project Enquiry Form</a>
+                </nav>
+
+                <div className="flex items-center gap-2.5">
+                  <button
+                    onClick={() => setViewMode('crm')}
+                    className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 px-3.5 py-2 rounded-xl font-semibold text-xs transition flex items-center gap-1.5 backdrop-blur shadow-lg"
+                  >
+                    <i data-lucide="lock" className="w-3.5 h-3.5"></i> CRM Portal
+                  </button>
+                  <a href="https://wa.me/918708145865" target="_blank" rel="noreferrer" className="bg-[#22c55e] hover:bg-[#16a34a] text-white px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20">
+                    <i data-lucide="message-square" className="w-3.5 h-3.5"></i> WhatsApp
+                  </a>
+                </div>
+              </div>
+            </header>
+
+            <main className="flex-1 flex flex-col">
+              {/* Hero Banner */}
+              <section className="relative overflow-hidden py-20 md:py-28 px-4 max-w-5xl mx-auto w-full text-center">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none"></div>
+                
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold mb-6 shadow-inner">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  Trusted Software & Mobile App Development Studio in Jind, Haryana
+                </div>
+
+                <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
+                  Empowering Local Businesses with <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500">Next-Gen Digital Solutions</span>
+                </h1>
+
+                <p className="text-slate-300 text-base md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+                  We build lightning-fast mobile apps, secure automated management dashboards, and modern web platforms tailored to help businesses scale effortlessly.
+                </p>
+
+                <div className="flex justify-center gap-4 flex-wrap">
+                  <a href="#enquiry" className="bg-[#38bdf8] text-[#090F1D] px-8 py-4 rounded-2xl font-black text-sm transition hover:bg-[#0ea5e9] hover:text-white shadow-xl shadow-cyan-500/20 flex items-center gap-2.5">
+                    <i data-lucide="file-text" className="w-4 h-4"></i> Enquire Now
+                  </a>
+                  <a href="https://wa.me/918708145865?text=Hello%20LocalForge%20Tech,%20I%20want%20to%20discuss%20a%20project." target="_blank" rel="noreferrer" className="bg-[#131C31] border border-slate-700/80 hover:border-cyan-500/50 text-slate-200 px-8 py-4 rounded-2xl font-bold text-sm transition flex items-center gap-2 shadow-lg">
+                    Chat on WhatsApp →
+                  </a>
+                </div>
+              </section>
+
+              {/* Trust Stats Bar */}
+              <section className="bg-[#131C31]/60 backdrop-blur border-y border-slate-800/80 py-8 px-4">
+                <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-cyan-400 font-mono">100%</div>
+                    <div className="text-xs text-slate-400 mt-1">Custom Crafted Code</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-emerald-400 font-mono">24/7</div>
+                    <div className="text-xs text-slate-400 mt-1">Direct Support & Maintenance</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-amber-400 font-mono">3X</div>
+                    <div className="text-xs text-slate-400 mt-1">Faster Customer Engagement</div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-[#10172A] border border-slate-800 shadow-sm">
+                    <div className="text-3xl md:text-4xl font-extrabold text-purple-400 font-mono">₹</div>
+                    <div className="text-xs text-slate-400 mt-1">Affordable Indian Pricing[cite: 1]</div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Core Services Cards */}
+              <section id="services" className="py-20 px-4 max-w-6xl mx-auto w-full">
+                <div className="text-center max-w-2xl mx-auto mb-16">
+                  <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800">WHAT WE BUILD</span>
+                  <h2 className="text-3xl md:text-4xl font-extrabold mt-3 mb-3">Enterprise Solutions for Local Growth</h2>
+                  <p className="text-slate-400 text-sm md:text-base">Designed with cutting-edge UI frameworks to ensure high user retention and conversion.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="bg-[#10172A] p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xl group hover:-translate-y-1">
+                    <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition duration-300">
+                      <i data-lucide="smartphone" className="w-7 h-7"></i>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-white">Custom Mobile Apps</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                      Engaging Android and iOS applications built for gyms, retail stores, and service providers with push notifications and direct booking.
+                    </p>
+                    <ul className="text-xs text-slate-300 space-y-2.5 font-medium border-t border-slate-800/80 pt-4">
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Member Attendance & Tracking</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Push Notifications & Alerts</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Secure In-App Portals</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-[#10172A] p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xl group hover:-translate-y-1">
+                    <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition duration-300">
+                      <i data-lucide="globe" className="w-7 h-7"></i>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-white">High-Performance Web Platforms</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                      Lightning-fast responsive landing pages optimized for local Google search visibility and high customer conversion rates.
+                    </p>
+                    <ul className="text-xs text-slate-300 space-y-2.5 font-medium border-t border-slate-800/80 pt-4">
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> SEO & Local Search Optimized</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Ultra-Fast Page Loading speeds</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Direct WhatsApp Lead Capture</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-[#10172A] p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xl group hover:-translate-y-1">
+                    <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition duration-300">
+                      <i data-lucide="cpu" className="w-7 h-7"></i>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 text-white">Workflow Automation Dashboards</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                      Replace messy registers with custom internal management dashboards, automated invoicing, and intelligent client follow-up trackers.
+                    </p>
+                    <ul className="text-xs text-slate-300 space-y-2.5 font-medium border-t border-slate-800/80 pt-4">
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Automated Billing & Invoicing</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Client Management & Pipeline CRM</li>
+                      <li className="flex items-center gap-2"><span className="text-cyan-400 font-bold">✓</span> Real-Time Business Analytics</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              {/* WHY US / TRUST SECTION */}
+              <section id="trust" className="bg-[#131C31]/50 py-20 px-4 border-y border-slate-800">
+                <div className="max-w-5xl mx-auto space-y-12">
+                  <div className="text-center max-w-3xl mx-auto space-y-3">
+                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest px-3.5 py-1 rounded-full bg-cyan-950 border border-cyan-800">WHY LOCAL BUSINESSES TRUST US</span>
+                    <h2 className="text-3xl md:text-4xl font-black text-white">Built-in Security & Reliability</h2>
+                    <p className="text-slate-400 text-sm md:text-base">
+                      At LocalForge Tech, we combine robust data protection with high performance to ensure your digital assets remain secure and dependable.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="lock" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">End-to-End Data Protection</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        All client communications, project files, and business records are handled securely using advanced cryptographic standards.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="shield-check" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">Clean & Sanitized Codebase</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Rigorous input filtering and strict validation protocols prevent vulnerabilities, ensuring stable and reliable software deployments.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="key" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">Restricted Admin Access Vaults</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Internal studio tools and CRM records are protected behind secure password-authenticated session vaults.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-7 space-y-3 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                        <i data-lucide="database" className="w-6 h-6"></i>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">Full Client Data Ownership</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        You retain complete ownership of your data with on-demand encrypted backup exports and local storage options.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* ================= PROMINENT LANDING PAGE ENQUIRY FORM / GREETING CARD ================= */}
+              <section id="enquiry" className="py-24 px-4 max-w-4xl mx-auto w-full">
+                <div className="bg-[#10172A] border border-slate-800 rounded-3xl p-8 md:p-14 shadow-2xl space-y-8 relative overflow-hidden ring-1 ring-cyan-500/20">
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+                  {!enquirySuccess ? (
+                    <>
+                      <div className="space-y-3 text-center md:text-left">
+                        <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest px-3.5 py-1 rounded-full bg-cyan-950 border border-cyan-800">START YOUR PROJECT</span>
+                        <h2 className="text-3xl md:text-5xl font-black text-white">Project Enquiry & Quotation Form</h2>
+                        <p className="text-slate-400 text-sm md:text-base">
+                          Submit your project requirements and estimated budget below. Your request will be automatically logged into our CRM pipeline instantly for review and follow-up.
+                        </p>
+                      </div>
+
+                      <form onSubmit={handlePublicEnquirySubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-slate-300">Business / Firm Name *</label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="e.g. Jind Fitness Club"
+                              value={enquiryForm.businessName}
+                              onChange={e => setEnquiryForm({ ...enquiryForm, businessName: e.target.value })}
+                              className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-slate-300">Contact Person Name</label>
+                            <input
+                              type="text"
+                              placeholder="Your Name"
+                              value={enquiryForm.contactPerson}
+                              onChange={e => setEnquiryForm({ ...enquiryForm, contactPerson: e.target.value })}
+                              className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-slate-300">WhatsApp / Phone Number *</label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="9812345678"
+                              value={enquiryForm.phone}
+                              onChange={e => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
+                              className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-slate-300">Industry / Sector</label>
+                            <select
+                              value={enquiryForm.industry}
+                              onChange={e => setEnquiryForm({ ...enquiryForm, industry: e.target.value })}
+                              className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                            >
+                              {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="block text-xs font-semibold text-slate-300">Estimated Project Budget (₹)[cite: 1]</label>
+                          <select
+                            value={enquiryForm.budget}
+                            onChange={e => setEnquiryForm({ ...enquiryForm, budget: e.target.value })}
+                            className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono"
+                          >
+                            <option value="15000">₹15,000 — Basic Website / Landing Page[cite: 1]</option>
+                            <option value="35000">₹35,000 — Custom Mobile App / Standard Portal[cite: 1]</option>
+                            <option value="75000">₹75,000 — Advanced Enterprise Platform & Automation[cite: 1]</option>
+                            <option value="120000">₹1,20,000+ — Full Custom Ecosystem & Multi-Branch CRM[cite: 1]</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="block text-xs font-semibold text-slate-300">Project Requirements & Details</label>
+                          <textarea
+                            rows="4"
+                            placeholder="Describe what features you need (e.g. member login, online fee payments, automated reminders)..."
+                            value={enquiryForm.requirements}
+                            onChange={e => setEnquiryForm({ ...enquiryForm, requirements: e.target.value })}
+                            className="w-full bg-[#080C14] border border-slate-700 rounded-xl p-3.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                          ></textarea>
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-4 rounded-xl text-sm transition shadow-xl shadow-cyan-500/25 flex items-center justify-center gap-2"
+                        >
+                          <i data-lucide="send" className="w-4 h-4"></i> Submit
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    /* EYE-CATCHING SUCCESS GREETING MESSAGE CARD */
+                    <div className="py-12 px-6 text-center space-y-6 animate-fadeIn">
+                      <div className="w-20 h-20 bg-emerald-500/20 border-2 border-emerald-500 rounded-full flex items-center justify-center mx-auto text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.4)] animate-bounce">
+                        <i data-lucide="check-circle-2" className="w-10 h-10"></i>
+                      </div>
+
+                      <div className="space-y-2 max-w-lg mx-auto">
+                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest px-3 py-1 rounded-full bg-emerald-950 border border-emerald-800">
+                          SUCCESSFULLY REGISTERED
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-black text-white">
+                          Request Submitted Successfully! 🎉
+                        </h2>
+                        <p className="text-slate-300 text-sm leading-relaxed">
+                          Thank you, <strong className="text-cyan-400">{submittedClientName}</strong>! Your project details and budget have been received and <strong className="text-emerald-400">automatically synchronized with our CRM pipeline</strong>. 
+                        </p>
+                      </div>
+
+                      <div className="bg-[#080C14] border border-slate-800 rounded-2xl p-6 max-w-md mx-auto space-y-3 text-left">
+                        <div className="flex items-center gap-3 text-xs text-slate-300">
+                          <div className="w-2 h-2 rounded-full bg-cyan-400"></div>
+                          <span>Assigned Status: <strong className="text-cyan-400">New Lead</strong></span>
+                        </div>
+                        <div className="flex items-center gap-3 text-xs text-slate-300">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                          <span>Next Step: Our technical team will review your requirements and reach out via WhatsApp shortly.</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 flex justify-center gap-4 flex-wrap">
+                        <button
+                          onClick={() => setEnquirySuccess(false)}
+                          className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg shadow-cyan-500/20 flex items-center gap-2"
+                        >
+                          <i data-lucide="plus-circle" className="w-4 h-4"></i> Submit Another Enquiry
+                        </button>
+                        <a
+                          href="https://wa.me/918708145865?text=Hello%20LocalForge%20Tech,%20I%20just%20submitted%20my%20project%20enquiry."
+                          target="_blank"
+                          rel="noreferrer"
+                          className="bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg shadow-emerald-500/20 flex items-center gap-2"
+                        >
+                          <i data-lucide="message-square" className="w-4 h-4"></i> Chat on WhatsApp Now
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+            </main>
+
+            {/* Professional Footer */}
+            <footer className="bg-[#131C31] text-slate-400 text-xs border-t border-slate-800/80 py-8 px-4 mt-auto">
+              <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+                <div>
+                  <p className="font-extrabold text-white text-sm">LocalForge Tech</p>
+                  <p className="text-[11px] text-slate-500 mt-1">&copy; 2026 LocalForge Tech. All rights reserved. | Huda Market, Jind, Haryana</p>
+                </div>
+                <div className="flex items-center gap-6 font-medium">
+                  <a href="#services" className="hover:text-cyan-400 transition">Services</a>
+                  <a href="#enquiry" className="hover:text-cyan-400 transition">Enquiry Form</a>
+                  <a href="https://wa.me/918708145865" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition">WhatsApp</a>
+                  <button 
+                    onClick={() => setViewMode('crm')}
+                    className="text-cyan-400 hover:underline font-mono text-[11px]"
+                  >
+                    🔐 CRM Portal
+                  </button>
+                </div>
+              </div>
+            </footer>
+          </div>
+        );
+      }
+
+      // ==========================================
+      // CRM AUTHENTICATION & DASHBOARD (100% UNTOUCHED CORE)
+      // ==========================================
+      if (!isAuthenticated) {
+        return (
+          <div className="min-h-screen bg-[#080C14] flex items-center justify-center p-4">
+            <div className="bg-[#0F172A] border border-slate-800 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-6">
+              <div className="text-center space-y-2">
+                <div className="w-full max-w-sm mx-auto p-3 rounded-xl bg-slate-900/80 border border-cyan-500/30 shadow-lg shadow-cyan-500/15 mb-4">
+                  <img 
+                    src="logo.png" 
+                    alt="LocalForge Tech Logo" 
+                    className="w-full h-auto object-contain max-h-32 mx-auto"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                  <i data-lucide="lock" className="w-12 h-12 text-cyan-400 hidden mx-auto"></i>
+                </div>
+                <h1 className="text-2xl font-black text-white tracking-wider">LOCALFORGE CRM</h1>
+                <p className="text-xs text-slate-400">Restricted Access Studio Portal</p>
+              </div>
+
+              <form onSubmit={handleLogin} className="space-y-4">
+                {authError && (
+                  <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs p-3 rounded-lg text-center">
+                    {authError}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">Access Key / Password</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="Enter CRM Password"
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-lg text-sm transition shadow-lg shadow-cyan-500/20"
+                >
+                  Authenticate Portal
+                </button>
+              </form>
+
+              <div className="text-center pt-2">
+                <button
+                  onClick={() => setViewMode('website')}
+                  className="text-xs text-slate-400 hover:text-cyan-400 transition"
+                >
+                  ← Return to Public Website
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-[#080C14] text-slate-100 flex flex-col md:flex-row">
+          {/* Sidebar Navigation */}
+          <aside className="w-full md:w-64 bg-[#0F172A] border-b md:border-b-0 md:border-r border-slate-800 flex-shrink-0 flex flex-col justify-between">
+            <div>
+              <div className="p-4 border-b border-slate-800/80 flex flex-col items-center gap-2">
+                <div className="w-full max-w-[240px] h-16 flex items-center justify-center p-1 overflow-hidden">
+                  <img 
+                    src="logo.png" 
+                    alt="LocalForge Tech Logo" 
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden items-center gap-2">
+                    <i data-lucide="cpu" className="w-7 h-7 text-cyan-400"></i>
+                    <span className="font-black text-base text-white tracking-wider">LOCALFORGE</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="inline-block text-cyan-400 text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800">CRM STUDIO</span>
+                  <p className="text-[11px] text-slate-400">Jind Operations</p>
+                </div>
+              </div>
+
+              <nav className="p-3 space-y-1">
+                <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                    activeTab === 'overview' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                  }`}
+                >
+                  <i data-lucide="layout-dashboard" className="w-4 h-4"></i>
+                  Overview & Stats
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('kanban')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                    activeTab === 'kanban' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                  }`}
+                >
+                  <i data-lucide="kanban" className="w-4 h-4"></i>
+                  Pipeline Board
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('directory')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                    activeTab === 'directory' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                  }`}
+                >
+                  <i data-lucide="users" className="w-4 h-4"></i>
+                  Client Directory
+                </button>
+              </nav>
+            </div>
+
+            <div className="p-4 border-t border-slate-800 bg-[#0B1120] text-xs text-slate-400 flex flex-col gap-2">
+              <button
+                onClick={() => setViewMode('website')}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 text-xs font-medium transition mb-1 border border-cyan-500/30"
+              >
+                <i data-lucide="globe" className="w-3.5 h-3.5"></i> Visit Public Website
+              </button>
+              <button
+                onClick={handleExportData}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition mb-1 border border-slate-700"
+              >
+                <i data-lucide="download" className="w-3.5 h-3.5 text-cyan-400"></i> Export CRM Backup
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-medium transition mb-1 border border-rose-500/30"
+              >
+                <i data-lucide="log-out" className="w-3.5 h-3.5"></i> Lock Portal
+              </button>
+              <div className="flex items-center justify-between text-slate-300">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Systems Active</span>
+                <span className="font-mono text-[10px] text-cyan-400">v2.8</span>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Workspace */}
+          <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+            {/* Top Bar */}
+            <header className="bg-[#0F172A]/80 backdrop-blur sticky top-0 z-20 border-b border-slate-800 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-white capitalize">
+                  {activeTab === 'overview' && 'Executive Dashboard'}
+                  {activeTab === 'kanban' && 'Lead Pipeline Board'}
+                  {activeTab === 'directory' && 'Client Directory & Logs'}
+                </h2>
+                <p className="text-xs text-slate-400">Direct WhatsApp Outreach & Deal Tracker</p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => { setEditingLead(null); setIsAddLeadOpen(true); }}
+                  className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition shadow-lg shadow-cyan-500/20"
+                >
+                  <i data-lucide="plus-circle" className="w-4 h-4"></i>
+                  Add New Lead
+                </button>
+              </div>
+            </header>
+
+            {/* Main Workspace Content */}
+            <div className="p-6 space-y-6 flex-1">
+              {/* Metrics Header */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-[#0F172A] border border-slate-800 p-4 rounded-xl shadow-sm">
+                  <div className="flex items-center justify-between text-slate-400 mb-2">
+                    <span className="text-xs font-medium uppercase tracking-wider">Total Leads</span>
+                    <i data-lucide="users" className="w-4 h-4 text-cyan-400"></i>
+                  </div>
+                  <div className="text-2xl font-extrabold text-white">{metrics.totalLeads}</div>
+                  <div className="text-xs text-slate-500 mt-1">Registered local prospective clients</div>
+                </div>
+
+                <div className="bg-[#0F172A] border border-slate-800 p-4 rounded-xl shadow-sm">
+                  <div className="flex items-center justify-between text-slate-400 mb-2">
+                    <span className="text-xs font-medium uppercase tracking-wider">Active Deals</span>
+                    <i data-lucide="activity" className="w-4 h-4 text-amber-400"></i>
+                  </div>
+                  <div className="text-2xl font-extrabold text-white">{metrics.activeDeals}</div>
+                  <div className="text-xs text-slate-500 mt-1">In negotiation / proposal stage</div>
+                </div>
+
+                <div className="bg-[#0F172A] border border-slate-800 p-4 rounded-xl shadow-sm">
+                  <div className="flex items-center justify-between text-slate-400 mb-2">
+                    <span className="text-xs font-medium uppercase tracking-wider">Pipeline Value</span>
+                    <i data-lucide="indian-rupee" className="w-4 h-4 text-emerald-400"></i>
+                  </div>
+                  <div className="text-2xl font-extrabold text-emerald-400">₹{metrics.totalPipelineValue.toLocaleString('en-IN')}[cite: 1]</div>
+                  <div className="text-xs text-slate-500 mt-1">Expected agency revenue</div>
+                </div>
+
+                <div className="bg-[#0F172A] border border-slate-800 p-4 rounded-xl shadow-sm">
+                  <div className="flex items-center justify-between text-slate-400 mb-2">
+                    <span className="text-xs font-medium uppercase tracking-wider">Win Rate</span>
+                    <i data-lucide="trending-up" className="w-4 h-4 text-purple-400"></i>
+                  </div>
+                  <div className="text-2xl font-extrabold text-white">{metrics.conversionRate}%</div>
+                  <div className="text-xs text-slate-500 mt-1">Closed Won ratio</div>
+                </div>
+              </div>
+
+              {/* Filter & Search Bar */}
+              <div className="bg-[#0F172A] border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="relative w-full md:w-80">
+                  <i data-lucide="search" className="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+                  <input
+                    type="text"
+                    placeholder="Search business, owner or phone..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-400 font-medium">Industry:</span>
+                    <select
+                      value={selectedIndustry}
+                      onChange={e => setSelectedIndustry(e.target.value)}
+                      className="bg-[#080C14] border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="All">All Industries</option>
+                      {INDUSTRIES.map(ind => <option key={ind} value={ind}>{ind}</option>)}
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-400 font-medium">Status:</span>
+                    <select
+                      value={selectedStatus}
+                      onChange={e => setSelectedStatus(e.target.value)}
+                      className="bg-[#080C14] border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="All">All Stages</option>
+                      {PIPELINE_STAGES.map(stage => <option key={stage.id} value={stage.id}>{stage.label}</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* View Tab 1: Dashboard Overview */}
+              {activeTab === 'overview' && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2 bg-[#0F172A] border border-slate-800 rounded-xl p-5">
+                    <h3 className="text-sm font-semibold text-slate-200 mb-4 flex items-center justify-between">
+                      <span>Recent Local Business Pipeline</span>
+                      <button onClick={() => setActiveTab('kanban')} className="text-xs text-cyan-400 hover:underline">View All Board →</button>
+                    </h3>
+                    <div className="space-y-3">
+                      {filteredLeads.slice(0, 5).map(lead => (
+                        <div key={lead.id} className="p-3 bg-[#080C14] border border-slate-800/80 rounded-lg flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <h4 className="font-medium text-slate-200 text-sm truncate">{lead.businessName}</h4>
+                            <p className="text-xs text-slate-400">{lead.contactPerson} • <span className="text-slate-500">{lead.industry}</span></p>
+                          </div>
+                          <div className="flex items-center gap-3 flex-shrink-0">
+                            <span className="text-sm font-semibold text-emerald-400">₹{(Number(lead.value) || 0).toLocaleString('en-IN')}[cite: 1]</span>
+                            <span className={`text-[10px] px-2 py-1 rounded border font-medium ${PIPELINE_STAGES.find(s => s.id === lead.status)?.color || ''}`}>
+                              {lead.status}
+                            </span>
+                            <a
+                              href={getWhatsAppLink(lead.phone, lead.businessName)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                              title="WhatsApp Client"
+                            >
+                              <i data-lucide="message-square" className="w-4 h-4"></i>
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-[#0F172A] border border-slate-800 rounded-xl p-5">
+                    <h3 className="text-sm font-semibold text-slate-200 mb-4 flex items-center gap-2">
+                      <i data-lucide="bell" className="w-4 h-4 text-amber-400"></i>
+                      <span>Follow-up Reminders</span>
+                    </h3>
+                    <div className="space-y-3">
+                      {leads.filter(l => l.nextFollowUp).map(lead => {
+                        const isOverdue = new Date(lead.nextFollowUp) < new Date(new Date().toISOString().split('T')[0]);
+                        return (
+                          <div key={lead.id} className={`p-3 rounded-lg border text-xs space-y-1.5 ${isOverdue ? 'bg-rose-500/5 border-rose-500/30' : 'bg-[#080C14] border-slate-800'}`}>
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-slate-200">{lead.businessName}</span>
+                              <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded ${isOverdue ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-800 text-slate-400'}`}>
+                                {lead.nextFollowUp}
+                              </span>
+                            </div>
+                            <p className="text-slate-400 line-clamp-1">{lead.notes || 'No notes added.'}</p>
+                            <div className="pt-1 flex items-center gap-2">
+                              <a
+                                href={`tel:${lead.phone}`}
+                                className="text-[11px] text-cyan-400 flex items-center gap-1 hover:underline"
+                              >
+                                <i data-lucide="phone" className="w-3 h-3"></i> Call Owner
+                              </a>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* View Tab 2: Kanban Pipeline */}
+              {activeTab === 'kanban' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 overflow-x-auto pb-4">
+                  {PIPELINE_STAGES.map(stage => {
+                    const stageLeads = filteredLeads.filter(l => l.status === stage.id);
+                    const stageTotal = stageLeads.reduce((sum, l) => sum + (Number(l.value) || 0), 0);
+
+                    return (
+                      <div key={stage.id} className="bg-[#0C1220] border border-slate-800/80 rounded-xl flex flex-col max-h-[75vh]">
+                        <div className="p-3 border-b border-slate-800 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs px-2 py-0.5 rounded font-semibold border ${stage.color}`}>
+                              {stage.label}
+                            </span>
+                            <span className="text-xs text-slate-500">({stageLeads.length})</span>
+                          </div>
+                          <span className="text-xs font-mono text-slate-400">₹{(stageTotal/1000).toFixed(0)}k[cite: 1]</span>
+                        </div>
+
+                        <div className="p-3 space-y-3 overflow-y-auto flex-1">
+                          {stageLeads.length === 0 ? (
+                            <div className="text-center py-8 text-xs text-slate-600 border border-dashed border-slate-800/60 rounded-lg">
+                              No deals here
+                            </div>
+                          ) : (
+                            stageLeads.map(lead => (
+                              <div
+                                key={lead.id}
+                                className="bg-[#0F172A] border border-slate-800 hover:border-slate-700 rounded-xl p-3 shadow-sm hover:shadow-cyan-500/5 transition space-y-2.5"
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <h4 className="font-semibold text-slate-200 text-sm">{lead.businessName}</h4>
+                                  <button
+                                    onClick={() => { setEditingLead(lead); setIsAddLeadOpen(true); }}
+                                    className="text-slate-500 hover:text-cyan-400 p-0.5"
+                                  >
+                                    <i data-lucide="edit-3" className="w-3.5 h-3.5"></i>
+                                  </button>
+                                </div>
+
+                                <div className="text-xs text-slate-400 space-y-1">
+                                  <p className="flex items-center gap-1">
+                                    <i data-lucide="user" className="w-3 h-3 text-slate-500"></i> {lead.contactPerson}
+                                  </p>
+                                  <p className="flex items-center gap-1 font-mono text-emerald-400 font-semibold">
+                                    <i data-lucide="indian-rupee" className="w-3 h-3"></i> {(Number(lead.value) || 0).toLocaleString('en-IN')}[cite: 1]
+                                  </p>
+                                </div>
+
+                                {lead.notes && (
+                                  <p className="text-[11px] text-slate-400 bg-[#080C14] p-2 rounded border border-slate-800 line-clamp-2">
+                                    {lead.notes}
+                                  </p>
+                                )}
+
+                                <div className="pt-2 border-t border-slate-800 flex items-center justify-between gap-1">
+                                  <select
+                                    value={lead.status}
+                                    onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                                    className="bg-[#080C14] text-[10px] text-slate-300 border border-slate-700 rounded px-1.5 py-1 focus:outline-none"
+                                  >
+                                    {PIPELINE_STAGES.map(s => (
+                                      <option key={s.id} value={s.id}>{s.label}</option>
+                                    ))}
+                                  </select>
+
+                                  <div className="flex items-center gap-1">
+                                    <a
+                                      href={getWhatsAppLink(lead.phone, lead.businessName)}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="p-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs"
+                                      title="WhatsApp Chat"
+                                    >
+                                      <i data-lucide="message-square" className="w-3.5 h-3.5"></i>
+                                    </a>
+                                    <button
+                                      onClick={() => setActiveLogLead(lead)}
+                                      className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs"
+                                      title="Activity Logs"
+                                    >
+                                      <i data-lucide="file-text" className="w-3.5 h-3.5"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* View Tab 3: Directory */}
+              {activeTab === 'directory' && (
+                <div className="bg-[#0F172A] border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs text-slate-300">
+                      <thead className="bg-[#080C14] text-slate-400 uppercase font-mono border-b border-slate-800">
+                        <tr>
+                          <th className="p-3.5">Business Name</th>
+                          <th className="p-3.5">Contact Person</th>
+                          <th className="p-3.5">Phone / WhatsApp</th>
+                          <th className="p-3.5">Industry</th>
+                          <th className="p-3.5">Status</th>
+                          <th className="p-3.5">Est. Budget</th>
+                          <th className="p-3.5">Follow-Up</th>
+                          <th className="p-3.5 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800">
+                        {filteredLeads.map(lead => (
+                          <tr key={lead.id} className="hover:bg-slate-800/40 transition">
+                            <td className="p-3.5 font-semibold text-slate-100">
+                              {lead.businessName}
+                              <span className="block text-[10px] font-normal text-slate-500">Source: {lead.source}</span>
+                            </td>
+                            <td className="p-3.5">{lead.contactPerson}</td>
+                            <td className="p-3.5 font-mono text-cyan-400">+91 {lead.phone}</td>
+                            <td className="p-3.5">
+                              <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                                {lead.industry}
+                              </span>
+                            </td>
+                            <td className="p-3.5">
+                              <span className={`px-2 py-0.5 rounded font-medium border ${PIPELINE_STAGES.find(s => s.id === lead.status)?.color || ''}`}>
+                                {lead.status}
+                              </span>
+                            </td>
+                            <td className="p-3.5 font-semibold text-emerald-400">₹{(Number(lead.value) || 0).toLocaleString('en-IN')}[cite: 1]</td>
+                            <td className="p-3.5 font-mono text-slate-400">
+                              {lead.nextFollowUp || '—'}
+                            </td>
+                            <td className="p-3.5 text-right space-x-1">
+                              <a
+                                href={getWhatsAppLink(lead.phone, lead.businessName)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-block p-1.5 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                              >
+                                <i data-lucide="message-square" className="w-3.5 h-3.5"></i>
+                              </a>
+                              <button
+                                onClick={() => setActiveLogLead(lead)}
+                                className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300"
+                              >
+                                <i data-lucide="file-text" className="w-3.5 h-3.5"></i>
+                              </button>
+                              <button
+                                onClick={() => { setEditingLead(lead); setIsAddLeadOpen(true); }}
+                                className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400"
+                              >
+                                <i data-lucide="edit-2" className="w-3.5 h-3.5"></i>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteLead(lead.id)}
+                                className="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400"
+                              >
+                                <i data-lucide="trash-2" className="w-3.5 h-3.5"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          </main>
+
+          {/* Modal 1: Add or Edit Lead Modal */}
+          {isAddLeadOpen && (
+            <LeadModal
+              lead={editingLead}
+              onClose={() => { setIsAddLeadOpen(false); setEditingLead(null); }}
+              onSave={handleSaveLead}
+            />
+          )}
+
+          {/* Modal 2: Activity Logs Modal */}
+          {activeLogLead && (
+            <ActivityLogModal
+              lead={activeLogLead}
+              logs={logs.filter(l => l.leadId === activeLogLead.id)}
+              onClose={() => setActiveLogLead(null)}
+              onAddLog={(logData) => handleAddLog(activeLogLead.id, logData)}
+            />
+          )}
+        </div>
+      );
+    }
+
+    function LeadModal({ lead, onClose, onSave }) {
+      const [formData, setFormData] = useState(lead || {
+        businessName: '',
+        contactPerson: '',
+        phone: '',
+        industry: 'Education',
+        status: 'New Lead',
+        source: 'Cold Visit',
+        value: '',
+        nextFollowUp: '',
+        notes: ''
+      });
+
+      const [errorMsg, setErrorMsg] = useState('');
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.businessName || !formData.phone) {
+          setErrorMsg('Please complete both Business Name and Phone field.');
+          return;
+        }
+        onSave(formData);
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0F172A] border border-slate-800 w-full max-w-lg rounded-xl shadow-2xl overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+              <h3 className="font-bold text-slate-100">{lead ? 'Edit Business Lead' : 'Add New Local Business Lead'}</h3>
+              <button onClick={onClose} className="text-slate-400 hover:text-white"><i data-lucide="x" className="w-5 h-5"></i></button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs overflow-y-auto max-h-[80vh]">
+              {errorMsg && (
+                <div className="p-2.5 rounded bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs">
+                  {errorMsg}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-slate-400 mb-1">Business / Firm Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Jind Fitness Club"
+                  value={formData.businessName}
+                  onChange={e => setFormData({ ...formData, businessName: e.target.value })}
+                  className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 mb-1">Contact Person</label>
+                  <input
+                    type="text"
+                    placeholder="Owner / Director"
+                    value={formData.contactPerson}
+                    onChange={e => setFormData({ ...formData, contactPerson: e.target.value })}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-400 mb-1">WhatsApp / Phone *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="9812345678"
+                    value={formData.phone}
+                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 mb-1">Industry</label>
+                  <select
+                    value={formData.industry}
+                    onChange={e => setFormData({ ...formData, industry: e.target.value })}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                  >
+                    {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-400 mb-1">Pipeline Stage</label>
+                  <select
+                    value={formData.status}
+                    onChange={e => setFormData({ ...formData, status: e.target.value })}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                  >
+                    {PIPELINE_STAGES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 mb-1">Lead Source</label>
+                  <select
+                    value={formData.source}
+                    onChange={e => setFormData({ ...formData, source: e.target.value })}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                  >
+                    {SOURCES.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-400 mb-1">Estimated Value (₹)[cite: 1]</label>
+                  <input
+                    type="number"
+                    placeholder="35000"
+                    value={formData.value}
+                    onChange={e => setFormData({ ...formData, value: e.target.value })}
+                    className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">Next Follow-Up Date</label>
+                <input
+                  type="date"
+                  value={formData.nextFollowUp || ''}
+                  onChange={e => setFormData({ ...formData, nextFollowUp: e.target.value })}
+                  className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-400 mb-1">Project Requirements / Notes</label>
+                <textarea
+                  rows="3"
+                  placeholder="Key features requested, custom app requirements..."
+                  value={formData.notes}
+                  onChange={e => setFormData({ ...formData, notes: e.target.value })}
+                  className="w-full bg-[#080C14] border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:border-cyan-500 focus:outline-none"
+                ></textarea>
+              </div>
+
+              <div className="pt-3 flex justify-end gap-2 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-lg font-bold"
+                >
+                  Save Lead
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function ActivityLogModal({ lead, logs, onClose, onAddLog }) {
+      const [type, setType] = useState('In-Person Meeting');
+      const [summary, setSummary] = useState('');
+
+      const handleAdd = (e) => {
+        e.preventDefault();
+        if (!summary.trim()) return;
+        onAddLog({ type, summary });
+        setSummary('');
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0F172A] border border-slate-800 w-full max-w-md rounded-xl shadow-2xl overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-slate-100">{lead.businessName}</h3>
+                <p className="text-xs text-slate-400">Interaction & Call History</p>
+              </div>
+              <button onClick={onClose} className="text-slate-400 hover:text-white"><i data-lucide="x" className="w-5 h-5"></i></button>
+            </div>
+
+            <div className="p-4 space-y-4 text-xs overflow-y-auto max-h-[60vh]">
+              <form onSubmit={handleAdd} className="space-y-2 bg-[#080C14] p-3 rounded-lg border border-slate-800">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-slate-300">Log New Interaction:</span>
+                  <select
+                    value={type}
+                    onChange={e => setType(e.target.value)}
+                    className="bg-[#0F1F2A] border border-slate-700 rounded px-2 py-1 text-slate-200"
+                  >
+                    <option value="In-Person Meeting">In-Person Meeting</option>
+                    <option value="WhatsApp">WhatsApp Chat</option>
+                    <option value="Phone Call">Phone Call</option>
+                    <option value="Email">Email</option>
+                  </select>
+                </div>
+                <textarea
+                  rows="2"
+                  placeholder="Summary of meeting or decision..."
+                  value={summary}
+                  onChange={e => setSummary(e.target.value)}
+                  className="w-full bg-[#0F172A] border border-slate-700 rounded p-2 text-slate-200 focus:outline-none"
+                ></textarea>
+                <button
+                  type="submit"
+                  className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-1.5 rounded transition"
+                >
+                  Record Entry
+                </button>
+              </form>
+
+              <div className="space-y-2">
+                <h4 className="font-semibold text-slate-400 text-[11px] uppercase tracking-wider">History</h4>
+                {logs.length === 0 ? (
+                  <p className="text-slate-500 italic text-center py-4">No activity logged yet.</p>
+                ) : (
+                  logs.map(log => (
+                    <div key={log.id} className="p-2.5 bg-[#080C14] border border-slate-800 rounded-lg space-y-1">
+                      <div className="flex items-center justify-between text-slate-400">
+                        <span className="font-semibold text-cyan-400">{log.type}</span>
+                        <span className="font-mono text-[10px]">{log.date}</span>
+                      </div>
+                      <p className="text-slate-300">{log.summary}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
 </body>
 </html>
