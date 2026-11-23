@@ -181,23 +181,39 @@ const PLANS = [
 const FAQS = [
   {
     q: "How long does a project take?",
-    a: "A landing page usually takes 1–2 weeks. A custom app or portal typically takes 4–8 weeks depending on scope. We agree on a clear timeline before any work begins.",
+    a: "A landing page or basic website takes about 1–2 weeks. A custom app or standard portal takes 4–6 weeks. Larger platforms with billing, automation and reporting take 6–10 weeks. The timeline is fixed in writing before we start, and each stage — discovery, design, build, testing — has its own review point so you always know where the project stands. If you have a launch date such as a festival opening or admission season, tell us at the first call and we will plan the scope around it.",
   },
   {
     q: "Do I own the code and my data?",
-    a: "Yes. The code, designs and data we create for you belong to you. We can export your data at any time and hand over the source code at the end of the project.",
+    a: "Yes — completely. Everything we build for you, including the source code, designs, database and content, belongs to you once the project is paid for. We hand over the full source repository at launch, and your data can be exported as a standard file at any time. You are never locked into us: you can host it elsewhere, hand it to another developer, or keep us on for support. We do not resell, reuse or publish your business data in any form.",
   },
   {
     q: "What do you need from me to start?",
-    a: "A short description of how your business works today, any existing content or branding, and one point of contact on your side. We handle the rest.",
+    a: "Three things: a short description of how your business runs today (what you currently write in registers, WhatsApp or Excel), any existing logo, photos or content you want used, and one person on your side who can approve designs and answer questions. That is enough for us to prepare a scope and a fixed quote. You do not need a written specification or technical knowledge — we run the discovery conversation and turn it into a plan you can review.",
+  },
+  {
+    q: "How much does a project cost?",
+    a: "Our published starting points are ₹10,000 for a landing page, ₹25,000 for a custom app or standard portal, ₹50,000 for an advanced platform with automation, and ₹80,000+ for a full multi-branch ecosystem. After a short discovery call you get a fixed, itemised quote — not an hourly estimate — so the price does not change unless you ask for extra features. There are no hidden charges for meetings, revisions within the agreed scope, or the handover at the end.",
+  },
+  {
+    q: "How do payments work?",
+    a: "Projects are split into milestones: a booking advance to reserve your slot, a payment when the design is approved, and the balance at launch. You pay by UPI, bank transfer or cash at our Jind office, and every payment gets a receipt with the milestone it covers. For smaller websites we can work with just two payments. Nothing is due before you have seen and agreed to the written scope and quote.",
+  },
+  {
+    q: "Can I request changes after the design is approved?",
+    a: "Yes. Every project includes two rounds of revisions at the design stage, and small text or image changes are free during the build. If you want a feature that was not in the agreed scope, we quote it separately before doing the work — you decide whether to add it, postpone it to a later phase, or skip it. This keeps the original timeline and price intact while still leaving room for the ideas that come up along the way.",
+  },
+  {
+    q: "Do you handle hosting, domains and app publishing?",
+    a: "Yes. We can register or connect your domain, set up hosting and deploy the site or app, then hand you the login details so the accounts stay in your name. For Android apps we prepare and publish the listing on Google Play under your developer account. Ongoing hosting and maintenance are optional — around ₹1,000–₹3,000 a month depending on the size of the project — or you can host it yourself with the instructions we provide.",
   },
   {
     q: "Do you support the software after launch?",
-    a: "Yes. Every project includes a support window after go-live, and we offer ongoing maintenance if you would like us to keep improving and hosting it.",
+    a: "Every project includes 30 days of free support after go-live for bug fixes and small adjustments, so problems that appear in the first weeks are handled at no cost. After that you can choose a monthly maintenance plan covering updates, backups, security patches and minor changes, or simply call us when you need something — we do not disappear after launch. Response time is usually the same working day.",
   },
   {
     q: "Do you work with businesses outside Jind?",
-    a: "We are based in Jind and work with clients across Haryana and the rest of India. Meetings can happen in person or over a call, whichever is easier for you.",
+    a: "Yes. We are based in Huda Market, Jind and work with clients across Haryana and the rest of India. For clients outside Jind, discovery and reviews happen over a call or WhatsApp with screen sharing, and everything is documented in writing so there is no ambiguity. If you prefer to meet in person, we can arrange a visit — tell us your location and we will work out the details.",
   },
 ];
 
