@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   Check,
+  ChevronDown,
   Clock,
   Code2,
   Compass,
@@ -23,12 +24,6 @@ import Link from "next/link";
 import { BrandLockup, BrandMark } from "@/components/site/brand-mark";
 import { EnquiryForm } from "@/components/site/enquiry-form";
 import { SiteHeader } from "@/components/site/site-header";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { BUDGET_OPTIONS, BRAND, formatINR } from "@/lib/constants";
 
@@ -563,18 +558,22 @@ export default function HomePage() {
               title="Questions we hear before every project"
               description="Still unsure about something? Send us a message on WhatsApp — we are happy to talk it through."
             />
-            <Accordion type="single" collapsible className="w-full">
-              {FAQS.map((faq, index) => (
-                <AccordionItem key={faq.q} value={`faq-${index}`}>
-                  <AccordionTrigger className="text-left text-sm font-semibold text-white hover:no-underline">
-                    {faq.q}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-sm leading-relaxed text-slate-400">
+            <div className="w-full divide-y divide-white/10 border-y border-white/10">
+              {FAQS.map((faq) => (
+                <details key={faq.q} className="group">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-sm font-semibold text-white transition-colors hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 [&::-webkit-details-marker]:hidden">
+                    <span>{faq.q}</span>
+                    <ChevronDown
+                      aria-hidden="true"
+                      className="size-4 shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-180"
+                    />
+                  </summary>
+                  <p className="pb-4 pr-6 text-sm leading-relaxed text-slate-400">
                     {faq.a}
-                  </AccordionContent>
-                </AccordionItem>
+                  </p>
+                </details>
               ))}
-            </Accordion>
+            </div>
           </div>
         </section>
 
