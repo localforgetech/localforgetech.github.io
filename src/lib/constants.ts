@@ -54,10 +54,10 @@ export const LOG_TYPES = [
 ] as const;
 
 export const BUDGET_OPTIONS = [
-  { value: 15000, label: "₹15,000 — Landing page / basic website" },
-  { value: 35000, label: "₹35,000 — Custom app / standard portal" },
-  { value: 75000, label: "₹75,000 — Advanced platform & automation" },
-  { value: 120000, label: "₹1,20,000+ — Full custom ecosystem" },
+  { value: 10000, label: "₹10,000 — Landing page / basic website" },
+  { value: 25000, label: "₹25,000 — Custom app / standard portal" },
+  { value: 50000, label: "₹50,000 — Advanced platform & automation" },
+  { value: 80000, label: "₹80,000+ — Full custom ecosystem" },
 ] as const;
 
 export const STATUS_STYLES: Record<

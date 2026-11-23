@@ -142,7 +142,7 @@ const REASONS = [
 const PLANS = [
   {
     name: "Starter",
-    price: 15000,
+    price: 10000,
     tagline: "Landing page or basic website",
     features: [
       "Single-page or small multi-page site",
@@ -154,7 +154,7 @@ const PLANS = [
   },
   {
     name: "Studio",
-    price: 35000,
+    price: 25000,
     tagline: "Custom app or standard portal",
     features: [
       "Everything in Starter",
@@ -166,7 +166,7 @@ const PLANS = [
   },
   {
     name: "Scale",
-    price: 75000,
+    price: 50000,
     tagline: "Advanced platform and automation",
     features: [
       "Everything in Studio",
@@ -532,7 +532,7 @@ export default function HomePage() {
             <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-slate-400">
               Need something bigger? Full custom ecosystems start at{" "}
               <span className="font-semibold text-white">
-                {formatINR(120000)}
+                {formatINR(80000)}
               </span>
               . Tell us what you have in mind and we will scope it with you.
             </p>

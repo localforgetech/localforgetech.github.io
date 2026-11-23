@@ -25,7 +25,7 @@ const INITIAL = {
   contactPerson: "",
   phone: "",
   industry: "Other" as (typeof INDUSTRIES)[number],
-  value: 35000,
+  value: 25000,
   notes: "",
 };
 

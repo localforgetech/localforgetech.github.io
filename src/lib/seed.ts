@@ -21,7 +21,7 @@ async function main() {
         industry: "Gym & Fitness",
         status: "Proposal Sent",
         source: "Cold Visit",
-        value: 35000,
+        value: 25000,
         nextFollowUp: "2026-12-05",
         notes:
           "Requested a custom member attendance and workout tracking app.",
@@ -34,7 +34,7 @@ async function main() {
         industry: "Education",
         status: "Meeting Scheduled",
         source: "Referral",
-        value: 75000,
+        value: 50000,
         nextFollowUp: "2026-12-02",
         notes: "School fee collection portal and student ID app demo.",
       },
