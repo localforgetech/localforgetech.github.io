@@ -115,3 +115,7 @@ $RECYCLE.BIN/
 .ideavo/project
 # next-agents-md
 .next-docs/
+
+# downloadable source bundles
+public/localforge-source.zip
+*.zip
