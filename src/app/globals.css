@@ -79,37 +79,60 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #070b14;
+  --foreground: #e7eef9;
+  --card: #0b1322;
+  --card-foreground: #e7eef9;
+  --popover: #0b1322;
+  --popover-foreground: #e7eef9;
+  --primary: #38bdf8;
+  --primary-foreground: #04121f;
+  --secondary: #12203a;
+  --secondary-foreground: #e7eef9;
+  --muted: #101c31;
+  --muted-foreground: #93a4bd;
+  --accent: #14243d;
+  --accent-foreground: #e7eef9;
+  --destructive: #f43f5e;
+  --border: rgba(148, 163, 184, 0.14);
+  --input: rgba(148, 163, 184, 0.18);
+  --ring: #38bdf8;
+  --chart-1: #38bdf8;
+  --chart-2: #34d399;
+  --chart-3: #fbbf24;
+  --chart-4: #a78bfa;
+  --chart-5: #f472b6;
+  --sidebar: #080f1d;
+  --sidebar-foreground: #e7eef9;
+  --sidebar-primary: #38bdf8;
+  --sidebar-primary-foreground: #04121f;
+  --sidebar-accent: #12203a;
+  --sidebar-accent-foreground: #e7eef9;
+  --sidebar-border: rgba(148, 163, 184, 0.14);
+  --sidebar-ring: #38bdf8;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background-color: #070b14;
+  background-image:
+    radial-gradient(60rem 40rem at 80% -10%, rgba(56, 189, 248, 0.12), transparent 60%),
+    radial-gradient(50rem 35rem at 0% 10%, rgba(56, 189, 248, 0.06), transparent 55%);
+  background-repeat: no-repeat;
+}
+
+::selection {
+  background-color: rgba(56, 189, 248, 0.3);
+  color: #f0f9ff;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1e3a5f #070b14;
 }
 
 @layer base {
